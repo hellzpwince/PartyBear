@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "620138706148",
+    "firebase_url": "https://party-bear.firebaseio.com",
+    "project_id": "party-bear",
+    "storage_bucket": "party-bear.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620138706148:android:f05fe991e70210f6",
+        "android_client_info": {
+          "package_name": "com.discoverfriend.partybear"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620138706148-umb7nkua39ajj94vbj2qqndaf92u8rln.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.discoverfriend.partybear",
+            "certificate_hash": "142C4C0974D692CBCFE50BDF85540DDCE346E561"
+          }
+        },
+        {
+          "client_id": "620138706148-9o4o35cqaq6tvgnh1dcc3tau2159jvst.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWY5QesL85TcCdwT62kBh1XthPWm2Okt0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620138706148-9o4o35cqaq6tvgnh1dcc3tau2159jvst.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
