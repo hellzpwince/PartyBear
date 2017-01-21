@@ -2,4 +2,17 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="zero_padding">0dp</dimen>
+    <dimen name="padding_15">15dp</dimen>
+    <dimen name="header_profilename">20dp</dimen>
+    <dimen name="profilenamesize">16sp</dimen>
+    <dimen name="headerProfileInfactFontSize">12sp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="drawerStandardSize">280dp</dimen>
+    <dimen name="profilePictureDimens">80dp</dimen>
+    <dimen name="profile_margin_bottom">8dp</dimen>
+    <dimen name="nav_top_margin">30dp</dimen>
+    <dimen name="image_slider_height">150dp</dimen>
+    <dimen name="padding_08">8dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
 </resources>

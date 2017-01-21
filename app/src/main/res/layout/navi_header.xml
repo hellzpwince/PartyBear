@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeHeaderLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_15">
+
+    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/xml_profileImageImageView"
+        android:layout_width="@dimen/profilePictureDimens"
+        android:layout_height="@dimen/profilePictureDimens"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/profile_margin_bottom"
+        android:layout_marginTop="@dimen/nav_top_margin"
+        android:contentDescription="@string/user_profile_image"
+        android:src="@drawable/ic_home_black_48dp" />
+
+    <TextView
+        android:id="@+id/xml_bearName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/xml_profileImageImageView"
+        android:layout_centerHorizontal="true"
+        android:text="@string/bear_name"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/profilenamesize" />
+
+    <Button
+        android:id="@+id/header_loginbtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/xml_bearName"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/padding_5"
+        android:background="@drawable/login_btn_shape"
+        android:text="Login"
+        android:textColor="@color/colorWhite" />
+</RelativeLayout>

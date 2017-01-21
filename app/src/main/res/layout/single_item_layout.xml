@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_5">
+
+    <TextView
+        android:id="@+id/category_itemPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@drawable/offer_drawable"
+        android:padding="3dp"
+        android:text="30% OFF"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/colorGrey"
+        android:textSize="8sp" />
+
+    <ImageView
+        android:id="@+id/category_ItemImage"
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        android:src="@drawable/header_background" />
+
+    <TextView
+        android:id="@+id/category_itemName"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Birthday Cakes"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
+</LinearLayout>

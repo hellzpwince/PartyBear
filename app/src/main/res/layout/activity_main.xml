@@ -1,17 +1,217 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_main"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:custom="http://schemas.android.com/tools"
+    android:id="@+id/xml_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.discoverfriend.partybear.MainActivity">
+    android:fitsSystemWindows="true"
+    android:padding="@dimen/zero_padding">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/toolbar" />
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_below="@id/app_bar"
+            android:layout_weight="1"
+            custom:ignore="ObsoleteLayoutParam">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                custom:ignore="ScrollViewSize">
+
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/image_slider_height"
+                    android:layout_margin="@dimen/padding_08" />
+
+                <RelativeLayout
+                    android:id="@+id/cake_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
+
+                    <TextView
+                        android:id="@+id/ocassion_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Cakes for Ocassions"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite" />
+
+                    <ProgressBar
+                        android:id="@+id/ocassion_progressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ocassion_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/cake_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ocassion_textview"
+                        android:layout_marginTop="@dimen/padding_08">
+
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
+
+                    <TextView
+                        android:id="@+id/flowers_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Flowers"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite" />
+
+                    <ProgressBar
+                        android:id="@+id/flowers_progressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/flowers_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/flowers_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/flowers_textview"
+                        android:layout_marginTop="@dimen/padding_08">
+
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/xml_homeBanner2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_08"
+                    android:layout_marginTop="@dimen/padding_08"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/home_promotional_banner"
+                    android:scaleType="fitCenter" />
+
+                <RelativeLayout
+                    android:id="@+id/gift_RLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
+
+                    <TextView
+                        android:id="@+id/gift_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Gifts"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite" />
+
+                    <ProgressBar
+                        android:id="@+id/gift_progressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gift_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/gift_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gift_textview"
+                        android:layout_marginTop="@dimen/padding_08">
+
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <com.andexert.library.RippleView
+            android:id="@+id/more"
+            rv_centered="true"
+            android:layout_width="match_parent"
+            android:layout_height="?android:actionBarSize">
+
+            <Button
+                android:id="@+id/xml_btnBakeCake"
+                android:layout_width="match_parent"
+                android:layout_height="?android:actionBarSize"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/zero_padding"
+                android:background="@color/colorPrimary"
+                android:padding="@dimen/padding_15"
+                android:text="Bake My Cake"
+                android:textColor="@color/colorWhite"
+                custom:ignore="ObsoleteLayoutParam"></Button>
+        </com.andexert.library.RippleView>
+
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navi_drawer"
+        android:layout_width="@dimen/drawerStandardSize"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/navi_header"
+        app:itemIconTint="@color/colorPrimary"
+        app:itemTextColor="@color/colorWhite"
+        app:menu="@menu/navigation_menu"
+        app:theme="@style/Theme.AppCompat.NoActionBar"></android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>
