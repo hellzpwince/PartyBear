@@ -7,6 +7,7 @@ import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,12 +63,13 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar mCakeProgressbar;
     private ProgressBar mFlowerProgressbar;
     private ProgressBar mGiftProgressbar;
-    private ScrollView scrollview;
+    private NestedScrollView scrollview;
     private ImageView homeBanner2;
     private TextView profileName;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private View hView;
+    private ImageView profileImage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
                 user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    View hView = nav_view.getHeaderView(0);
+                    hView = nav_view.getHeaderView(0);
                     profileName = (TextView) hView.findViewById(R.id.xml_bearName);
                     if (profileName != null && (user.getDisplayName() != null)) {
                         profileName.setText(user.getDisplayName());
 
                     }
-                    ImageView profileImage = (ImageView) hView.findViewById(R.id.xml_profileImageImageView);
+                    profileImage = (ImageView) hView.findViewById(R.id.xml_profileImageImageView);
 
                     if (profileImage != null && (user.getPhotoUrl() != null)) {
                         Picasso.with(getApplicationContext()).load(user.getPhotoUrl()).into(profileImage);
@@ -108,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
 
-        scrollview = (ScrollView) findViewById(R.id.scroll_view);
+        scrollview = (NestedScrollView) findViewById(R.id.scroll_view);
         homeBanner2 = (ImageView) findViewById(R.id.xml_homeBanner2);
 
 
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         setup((DrawerLayout) findViewById(R.id.xml_drawer), toolbar);
         scrollview.setVerticalScrollBarEnabled(false);
         //Hiding Scrollbar from navigation Drawer
@@ -376,6 +378,15 @@ public class MainActivity extends AppCompatActivity {
         if (user != null) {
             mAuth.signOut();
             LoginManager.getInstance().logOut();
+
+            if (profileName != null && (user.getDisplayName() != null)) {
+                profileName.setText(R.string.bear_name);
+
+            }
+
+            if (profileImage != null) {
+                Picasso.with(getApplicationContext()).load(R.drawable.bgx).into(profileImage);
+            }
             item.setVisible(false);
             headLoginbtn.setVisibility(View.VISIBLE);
             ToastOX.ok(getApplicationContext(), "You Logged Out Sucessfully", Toast.LENGTH_SHORT);

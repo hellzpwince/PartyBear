@@ -2,8 +2,13 @@
 <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
+    android:layout_height="?android:actionBarSize"
     android:background="@color/colorPrimary"
+    android:paddingRight="@dimen/padding_08"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+    <ImageView
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/white_pb_logo_small" />
 </android.support.v7.widget.Toolbar>

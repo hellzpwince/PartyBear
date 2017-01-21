@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/profile_margin_bottom"
         android:layout_marginTop="@dimen/nav_top_margin"
         android:contentDescription="@string/user_profile_image"
-        android:src="@drawable/ic_home_black_48dp" />
+        android:src="@drawable/bgx" />
 
     <TextView
         android:id="@+id/xml_bearName"

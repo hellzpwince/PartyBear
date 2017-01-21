@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <tabs>
+        <tab
+            activeColor="@color/colorWhite"
+            badgeBackgroundColor="@color/colorWhite"
+            barColorWhenSelected="@color/colorPrimary"
+            icon="@drawable/ic_favorite_border_white_24dp"
+            id="@+id/tab_favorites"
+            inActiveColor="@color/colorWhiteTrans"
+            title="Favorites" />
+        <tab
+            activeColor="@color/colorWhite"
+            badgeBackgroundColor="@color/colorWhite"
+            barColorWhenSelected="@color/colorPrimary"
+            icon="@drawable/ic_cake_white_24dp"
+            id="@+id/tab_bakecake"
+            inActiveColor="@color/colorWhiteTrans"
+            title="Bake Cake" />
+
+    </tabs>
+</PreferenceScreen>

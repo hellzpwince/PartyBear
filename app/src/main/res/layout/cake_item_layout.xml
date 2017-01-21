@@ -8,8 +8,7 @@
     <ImageView
         android:id="@+id/category_ItemImage"
         android:layout_width="100dp"
-        android:layout_height="120dp"
-        android:src="@drawable/header_background" />
+        android:layout_height="120dp" />
 
     <TextView
         android:id="@+id/category_itemName"
