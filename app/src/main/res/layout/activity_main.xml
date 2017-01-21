@@ -8,205 +8,197 @@
     android:fitsSystemWindows="true"
     android:padding="@dimen/zero_padding">
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorWhite"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <android.support.design.widget.CoordinatorLayout
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/my_appbar_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="?android:actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <android.support.design.widget.AppBarLayout
-                android:id="@+id/my_appbar_container"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+                android:background="@color/colorPrimary"
+                android:paddingRight="@dimen/padding_08"
+                app:layout_scrollFlags="scroll|enterAlways">
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/app_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="?android:actionBarSize"
-                    android:background="@color/colorPrimary"
-                    android:paddingRight="@dimen/padding_08"
-                    app:layout_scrollFlags="scroll|enterAlways">
+                <ImageView
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/white_pb_logo_small" />
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.AppBarLayout>
 
-                    <ImageView
-                        android:layout_width="130dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/white_pb_logo_small" />
-                </android.support.v7.widget.Toolbar>
-            </android.support.design.widget.AppBarLayout>
+        <android.support.v4.widget.NestedScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            custom:ignore="ObsoleteLayoutParam">
 
-            <android.support.v4.widget.NestedScrollView
-                android:id="@+id/scroll_view"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/app_bar"
-                android:layout_gravity="fill_vertical"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                custom:ignore="ObsoleteLayoutParam">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                custom:ignore="ScrollViewSize">
 
-                <LinearLayout
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/slider"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    custom:ignore="ScrollViewSize">
+                    android:layout_height="@dimen/image_slider_height"
+                    android:layout_margin="@dimen/padding_08" />
 
-                    <com.daimajia.slider.library.SliderLayout
-                        android:id="@+id/slider"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/image_slider_height"
-                        android:layout_margin="@dimen/padding_08" />
+                <RelativeLayout
+                    android:id="@+id/cake_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
 
-                    <RelativeLayout
-                        android:id="@+id/cake_layout"
+                    <TextView
+                        android:id="@+id/ocassion_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Cakes for Ocassions"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8sp" />
+
+                    <ProgressBar
+                        android:id="@+id/ocassion_progressbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:padding="@dimen/padding_15">
+                        android:layout_below="@id/ocassion_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
 
-                        <TextView
-                            android:id="@+id/ocassion_textview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/padding_5"
-                            android:text="Cakes for Ocassions"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/view_all_btn_bg"
-                            android:gravity="end"
-                            android:padding="@dimen/padding_5"
-                            android:text="View All"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="8sp" />
-
-                        <ProgressBar
-                            android:id="@+id/ocassion_progressbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/ocassion_textview"
-                            android:layout_marginTop="@dimen/padding_20"
-                            android:visibility="visible" />
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/cake_recycleView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/ocassion_textview"
-                            android:layout_marginTop="@dimen/padding_08">
-
-                        </android.support.v7.widget.RecyclerView>
-                    </RelativeLayout>
-
-                    <RelativeLayout
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/cake_recycleView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:padding="@dimen/padding_15">
+                        android:layout_below="@id/ocassion_textview"
+                        android:layout_marginTop="@dimen/padding_08">
 
-                        <TextView
-                            android:id="@+id/flowers_textview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/padding_5"
-                            android:text="Flowers"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/view_all_btn_bg"
-                            android:gravity="end"
-                            android:padding="@dimen/padding_5"
-                            android:text="View All"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="8sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
 
-                        <ProgressBar
-                            android:id="@+id/flowers_progressbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/flowers_textview"
-                            android:layout_marginTop="@dimen/padding_20"
-                            android:visibility="visible" />
+                    <TextView
+                        android:id="@+id/flowers_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Flowers"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/flowers_recycleView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/flowers_textview"
-                            android:layout_marginTop="@dimen/padding_08">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8sp" />
 
-                        </android.support.v7.widget.RecyclerView>
-                    </RelativeLayout>
-
-                    <ImageView
-                        android:id="@+id/xml_homeBanner2"
+                    <ProgressBar
+                        android:id="@+id/flowers_progressbar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/padding_08"
-                        android:layout_marginTop="@dimen/padding_08"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/home_promotional_banner"
-                        android:scaleType="fitCenter" />
+                        android:layout_below="@id/flowers_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
 
-                    <RelativeLayout
-                        android:id="@+id/gift_RLayout"
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/flowers_recycleView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:padding="@dimen/padding_15">
+                        android:layout_below="@id/flowers_textview"
+                        android:layout_marginTop="@dimen/padding_08">
 
-                        <TextView
-                            android:id="@+id/gift_textview"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="@dimen/padding_5"
-                            android:text="Gifts"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/view_all_btn_bg"
-                            android:gravity="end"
-                            android:padding="@dimen/padding_5"
-                            android:text="View All"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="8sp" />
+                <ImageView
+                    android:id="@+id/xml_homeBanner2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_08"
+                    android:layout_marginTop="@dimen/padding_08"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/home_promotional_banner"
+                    android:scaleType="fitCenter" />
 
-                        <ProgressBar
-                            android:id="@+id/gift_progressbar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/gift_textview"
-                            android:layout_marginTop="@dimen/padding_20"
-                            android:visibility="visible" />
+                <RelativeLayout
+                    android:id="@+id/gift_RLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:padding="@dimen/padding_15">
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/gift_recycleView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/gift_textview"
-                            android:layout_marginTop="@dimen/padding_08">
+                    <TextView
+                        android:id="@+id/gift_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/padding_5"
+                        android:text="Gifts"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-                        </android.support.v7.widget.RecyclerView>
-                    </RelativeLayout>
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
-        </android.support.design.widget.CoordinatorLayout>
-    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="8sp" />
+
+                    <ProgressBar
+                        android:id="@+id/gift_progressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gift_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/gift_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/gift_textview"
+                        android:layout_marginTop="@dimen/padding_08">
+
+                    </android.support.v7.widget.RecyclerView>
+                </RelativeLayout>
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navi_drawer"

@@ -3,6 +3,7 @@
     android:id="@+id/relativeHeaderLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/colorCompleteBlack"
     android:orientation="vertical"
     android:padding="@dimen/padding_15">
 

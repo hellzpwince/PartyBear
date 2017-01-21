@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/padding_5"
+    android:padding="@dimen/padding_5">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_5">
+
+        <ImageView
+            android:id="@+id/categoryCardImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_08"
+            android:src="@drawable/bgx" />
+
+        <TextView
+            android:id="@+id/categoryCardTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/categoryCardImageView"
+            android:text="Product Name" />
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
