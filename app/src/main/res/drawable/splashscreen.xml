@@ -3,10 +3,10 @@
 
     <item android:drawable="@color/colorPrimary" />
 
-    <item>
+    <item android:gravity="center">
         <bitmap
             android:gravity="center"
-            android:src="@drawable/white_pb_logo_small" />
+            android:src="@drawable/splash_xhdpi" />
     </item>
 
 </layer-list>

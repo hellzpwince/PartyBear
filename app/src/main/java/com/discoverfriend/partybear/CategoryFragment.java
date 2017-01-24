@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 
 import com.discoverfriend.partybear.category.CategoryModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
@@ -33,6 +37,7 @@ public class CategoryFragment extends Fragment {
     DatabaseReference rootRef;
     DatabaseReference databaseRef;
     Query query;
+    Query myquery;
     private View mView;
     private RecyclerView mRecycleView;
     private ProgressBar mProgress;
@@ -54,6 +59,33 @@ public class CategoryFragment extends Fragment {
         rootRef = FirebaseDatabase.getInstance().getReference();
         databaseRef = rootRef.child("categories").child("cakes");
         query = databaseRef;
+        myquery = databaseRef.orderByKey().startAt("cake").endAt("cake");
+        myquery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.e("MyQuery", "MyQuery is :" + dataSnapshot);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         GridLayoutManager grid = new GridLayoutManager(getActivity(), 2);
         mRecycleView.setLayoutManager(grid);
 
@@ -69,15 +101,21 @@ public class CategoryFragment extends Fragment {
                 CategoryFragment.categoryCardViewHolder.class,
                 query
         ) {
+
             @Override
-            protected void populateViewHolder(CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, int position) {
+            protected void populateViewHolder(CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, final int position) {
                 final String post_key = getRef(position).getKey();
+                if (getRef(position).child("images") == null) {
+                    Log.e("Image Snapshot", " is " + getRef(position).child("images"));
+                }
+
+
                 viewHolder.setTitle(model.getCategoryName());
                 viewHolder.setImage(getActivity(), model.getCategoryImage());
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(), "Hello", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), post_key, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -109,7 +147,7 @@ public class CategoryFragment extends Fragment {
 
         public void setImage(Context ctx, String image) {
             ImageView category_image = (ImageView) mview.findViewById(R.id.categoryCardImageView);
-            Picasso.with(ctx).load(image).into(category_image);
+            Picasso.with(ctx).load(image).placeholder(R.drawable.loading_100).into(category_image);
         }
     }
 }

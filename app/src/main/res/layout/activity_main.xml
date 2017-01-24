@@ -5,6 +5,7 @@
     android:id="@+id/xml_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:fitsSystemWindows="true"
     android:padding="@dimen/zero_padding">
 
@@ -25,19 +26,23 @@
                 android:background="@color/colorPrimary"
                 android:paddingRight="@dimen/padding_08"
                 app:layout_scrollFlags="scroll|enterAlways">
-
-                <ImageView
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/white_pb_logo_small" />
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
+
+        <ProgressBar
+            android:id="@+id/homepage_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:progressTintMode="add"
+            android:secondaryProgressTint="@color/colorPrimary"
+            android:visibility="visible" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="fill_vertical"
+            android:visibility="gone"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             custom:ignore="ObsoleteLayoutParam">
 
@@ -58,7 +63,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15">
+                    android:padding="@dimen/padding_15"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     <TextView
                         android:id="@+id/ocassion_textview"
@@ -93,16 +99,19 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ocassion_textview"
-                        android:layout_marginTop="@dimen/padding_08">
+                        android:layout_marginTop="@dimen/padding_08"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/category2layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15">
+                    android:padding="@dimen/padding_15"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     <TextView
                         android:id="@+id/flowers_textview"
@@ -137,7 +146,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/flowers_textview"
-                        android:layout_marginTop="@dimen/padding_08">
+                        android:layout_marginTop="@dimen/padding_08"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
@@ -157,7 +167,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15">
+                    android:padding="@dimen/padding_15"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     <TextView
                         android:id="@+id/gift_textview"
@@ -192,7 +203,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/gift_textview"
-                        android:layout_marginTop="@dimen/padding_08">
+                        android:layout_marginTop="@dimen/padding_08"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
@@ -206,10 +218,10 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:theme="@style/Theme.AppCompat.NoActionBar"
         app:headerLayout="@layout/navi_header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="@color/colorWhite"
-        app:menu="@menu/navigation_menu"
-        app:theme="@style/Theme.AppCompat.NoActionBar"></android.support.design.widget.NavigationView>
+        app:menu="@menu/navigation_menu"></android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

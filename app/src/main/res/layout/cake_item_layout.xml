@@ -15,7 +15,6 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Birthday Cakes"
         android:textAlignment="center"
         android:textSize="12sp" />
 
@@ -24,7 +23,6 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Starting from Rs150"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textSize="8sp" />

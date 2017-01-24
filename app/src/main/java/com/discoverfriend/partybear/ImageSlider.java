@@ -1,15 +1,11 @@
 package com.discoverfriend.partybear;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.onurciner.toastox.ToastOX;
 
 /**
  * Created by mukesh on 19/01/17.

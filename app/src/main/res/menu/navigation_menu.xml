@@ -20,24 +20,24 @@
     <group android:id="@+id/nav_group_quicklink">
         <item
             android:id="@+id/menu_account"
-            android:icon="@drawable/ic_account_circle_black_48dp"
+            android:icon="@drawable/ic_account_circle_white_24dp"
             android:title="My Account" />
         <item
             android:id="@+id/menu_wallet"
-            android:icon="@drawable/ic_account_balance_wallet_black_48dp"
+            android:icon="@drawable/ic_account_balance_wallet_white_24dp"
             android:title="My Wallet" />
         <item
             android:id="@+id/menu_wishList"
-            android:icon="@drawable/ic_favorite_black_48dp"
+            android:icon="@drawable/ic_favorite_white_24dp"
             android:title="My Wishlist" />
         <item
             android:id="@+id/menu_myOrders"
-            android:icon="@drawable/ic_local_mall_black_48dp"
+            android:icon="@drawable/ic_local_offer_white_24dp"
             android:title="My Orders" />
 
         <item
             android:id="@+id/menu_delivery"
-            android:icon="@drawable/ic_local_shipping_black_48dp"
+            android:icon="@drawable/ic_local_shipping_white_24dp"
             android:title="Delivery Address" />
     </group>
     <group android:id="@+id/nav_group_support">

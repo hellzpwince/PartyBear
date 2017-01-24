@@ -12,7 +12,6 @@
         android:layout_gravity="end"
         android:background="@drawable/offer_drawable"
         android:padding="3dp"
-        android:text="30% OFF"
         android:textAlignment="viewEnd"
         android:textColor="@color/colorGrey"
         android:textSize="8sp" />
