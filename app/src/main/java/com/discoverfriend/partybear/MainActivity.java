@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.discoverfriend.partybear.Product.ProductActivity;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.RuntimeExecutionException;
@@ -88,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private View hView;
     private ImageView profileImage;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
                 categoryHolder1.setText(category1);
                 categoryHolder2.setText(category2);
                 categoryHolder3.setText(category3);
-                homeProgress.setVisibility(View.GONE);
-                scrollview.setVisibility(View.VISIBLE);
                 category = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category1type")).limitToFirst(9);
                 flower = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category2type")).limitToFirst(9);
                 giftQuery = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category3type")).limitToFirst(6);
@@ -183,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(categoryViewHolder viewHolder, CakeItemModel model, int position) {
                         final String post_key = getRef(position).getKey();
-
+                        final String post_name = model.getName();
                         viewHolder.setTitle(model.getName());
                         viewHolder.setOffer(model.getOffer());
                         viewHolder.setImage(getApplicationContext(), model.getImageurl());
@@ -191,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
-                                categoryIntent.putExtra("category", post_key);
+                                categoryIntent.putExtra("categoryid", post_key);
+                                categoryIntent.putExtra("categoryname", post_name);
                                 startActivity(categoryIntent);
                             }
                         });
@@ -214,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(categoryViewHolder viewHolder, CakeItemModel model, int position) {
                         final String post_key = getRef(position).getKey();
+                        final String post_name = model.getName();
                         viewHolder.setTitle(model.getName());
                         viewHolder.setOffer(model.getOffer());
                         viewHolder.setImage(getApplicationContext(), model.getImageurl());
@@ -221,7 +221,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
-                                categoryIntent.putExtra("category", post_key);
+                                categoryIntent.putExtra("categoryid", post_key);
+                                categoryIntent.putExtra("categoryname", post_name);
                                 startActivity(categoryIntent);
                             }
                         });
@@ -257,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void populateViewHolder(categoryViewHolder viewHolder, CakeItemModel model, int position) {
                         final String post_key = getRef(position).getKey();
+                        final String post_name = model.getName();
                         viewHolder.setTitle(model.getName());
                         viewHolder.setOffer(model.getOffer());
                         viewHolder.setImage(getApplicationContext(), model.getImageurl());
@@ -264,7 +266,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
-                                categoryIntent.putExtra("category", post_key);
+                                categoryIntent.putExtra("categoryid", post_key);
+                                categoryIntent.putExtra("categoryname", post_name);
                                 startActivity(categoryIntent);
                             }
                         });
@@ -276,6 +279,8 @@ public class MainActivity extends AppCompatActivity {
                         mGiftProgressbar.setVisibility(View.GONE);
                     }
                 };
+                homeProgress.setVisibility(View.GONE);
+                scrollview.setVisibility(View.VISIBLE);
                 myRecycleView.setAdapter(firebaseRecycler);
                 flowerRecycleView.setAdapter(flowerFirebaseRecycler);
                 giftRecycleView.setAdapter(giftfirebaseRecycler);
@@ -340,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
                         int id = item.getItemId();
                         if (id == R.id.menu_account) {
                             Toast.makeText(MainActivity.this, "Account", Toast.LENGTH_SHORT).show();
+
                         }
                         if (id == R.id.menu_buyCakes) {
                             Toast.makeText(MainActivity.this, "Buy A Cake", Toast.LENGTH_SHORT).show();
@@ -488,7 +494,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void setImage(Context ctx, String image) {
             ImageView category_image = (ImageView) mview.findViewById(R.id.category_ItemImage);
-            Picasso.with(ctx).load(image).placeholder(R.drawable.loading_100).into(category_image);
+            Picasso.with(ctx).load(image).resize(400, 400).placeholder(R.drawable.loading_100).into(category_image);
         }
 
         public void setOffer(String offer) {

@@ -5,33 +5,58 @@ package com.discoverfriend.partybear.category;
  */
 
 public class CategoryModel {
-    String categoryName;
-    String categoryImage;
+    private String name, offer, imageurl, feature;
+    private int price;
+
+    public CategoryModel(String name, String offer, String imageurl, String feature, int price) {
+        this.name = name;
+        this.offer = offer;
+        this.imageurl = imageurl;
+        this.feature = feature;
+        this.price = price;
+    }
 
     public CategoryModel() {
     }
 
-    public CategoryModel(String categoryName, String categoryImage) {
-        this.categoryName = categoryName;
-        this.categoryImage = categoryImage;
+    public String getName() {
+        return name;
     }
 
-
-    public String getCategoryName() {
-        return categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public String getOffer() {
+        return offer;
     }
 
-    public String getCategoryImage() {
-        return categoryImage;
+    public void setOffer(String offer) {
+        this.offer = offer;
     }
 
-    public void setCategoryImage(String categoryImage) {
-        this.categoryImage = categoryImage;
+    public String getImageurl() {
+        return imageurl;
     }
 
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
+    public String getFeature() {
+        return feature;
+    }
+
+    public void setFeature(String feature) {
+        this.feature = feature;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
 }

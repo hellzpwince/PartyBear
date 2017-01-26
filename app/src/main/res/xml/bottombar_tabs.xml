@@ -2,29 +2,20 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <tabs>
         <tab
-            activeColor="@color/colorPrimary"
-            badgeBackgroundColor="@color/colorWhite"
-            barColorWhenSelected="@color/colorWhite"
+            activeColor="@color/colorWhite"
+            barColorWhenSelected="@color/colorDarkBlack"
+            icon="@drawable/ic_view_module_white_24dp"
+            id="@+id/tab_bakecake"
+            inActiveColor="@color/colorWhiteTrans"
+            title="Grid" />
+        <tab
+            activeColor="@color/colorWhite"
+            barColorWhenSelected="@color/colorPrimary"
             icon="@drawable/ic_list_white_24dp"
             id="@+id/tab_favorites"
-            inActiveColor="@color/colorPrimaryDark"
-            title="Category" />
-        <tab
-            activeColor="@color/colorPrimaryShade1"
-            badgeBackgroundColor="@color/colorWhite"
-            barColorWhenSelected="@color/colorWhite"
-            icon="@drawable/ic_local_offer_white_24dp"
-            id="@+id/tab_bakecake"
-            inActiveColor="@color/colorPrimaryDark"
-            title="Offers" />
-        <tab
-            activeColor="@color/colorDarkBlack"
-            badgeBackgroundColor="@color/colorWhite"
-            barColorWhenSelected="@color/colorWhite"
-            icon="@drawable/ic_stars_white_24dp"
-            id="@+id/accessories"
-            inActiveColor="@color/colorPrimaryDark"
-            title="Top Rated" />
+            inActiveColor="@color/colorWhiteTrans"
+            title="List" />
+
 
     </tabs>
 </PreferenceScreen>

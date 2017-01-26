@@ -1,12 +1,10 @@
 package com.discoverfriend.partybear;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,25 +18,16 @@ import android.widget.Toast;
 import com.discoverfriend.partybear.Product.ProductActivity;
 import com.discoverfriend.partybear.category.CategoryModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.roughike.bottombar.BottomBar;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-
 /**
- * A simple {@link Fragment} subclass.
+ * Created by mukesh on 25/01/17.
  */
-public class CategoryFragment extends Fragment {
+
+public class GridCategoryFragment extends Fragment {
 
     DatabaseReference rootRef;
     String categoryid;
@@ -48,7 +37,7 @@ public class CategoryFragment extends Fragment {
     private RecyclerView mRecycleView;
     private ProgressBar mProgress;
 
-    public CategoryFragment() {
+    public GridCategoryFragment() {
         // Required empty public constructor
     }
 
@@ -66,9 +55,9 @@ public class CategoryFragment extends Fragment {
         myquery = rootRef.child("categories").child(categoryid).child("products").orderByPriority();
 
 
-        LinearLayoutManager linear = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager grid = new GridLayoutManager(getActivity().getApplicationContext(), 2);
 
-        mRecycleView.setLayoutManager(linear);
+        mRecycleView.setLayoutManager(grid);
         return mView;
 
     }
@@ -79,7 +68,7 @@ public class CategoryFragment extends Fragment {
 
         FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
                 CategoryModel.class,
-                R.layout.categorycardview,
+                R.layout.grid_cardview,
                 CategoryFragment.categoryCardViewHolder.class,
                 myquery
         ) {
@@ -88,9 +77,9 @@ public class CategoryFragment extends Fragment {
             protected void populateViewHolder(final CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, final int position) {
                 final String post_key = getRef(position).getKey();
                 try {
+
                     viewHolder.setTitle(model.getName());
                     viewHolder.setPrice(model.getPrice());
-                    viewHolder.setEggless(model.getFeature());
                     viewHolder.setImage(getActivity(), model.getImageurl());
                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -98,7 +87,6 @@ public class CategoryFragment extends Fragment {
                             viewHolder.startProductActivity(getActivity(), post_key);
                         }
                     });
-
                 } catch (Exception e) {
                     Log.e("Try Error", "Grid Category Error Logged.");
                 }
@@ -125,23 +113,15 @@ public class CategoryFragment extends Fragment {
             mview = itemView;
         }
 
-        public void startProductActivity(final Context ctx, final String post_key) {
-            final Intent productIntent = new Intent(ctx, ProductActivity.class);
-            productIntent.putExtra("post_key", post_key);
-            ctx.startActivity(productIntent);
-        }
-
         public void setTitle(String title) {
             TextView product_title = (TextView) mview.findViewById(R.id.categoryCardTitle);
             product_title.setText(title);
         }
 
-        public void setEggless(String feature) {
-            if (feature != null) {
-                TextView product_title = (TextView) mview.findViewById(R.id.eggstatus);
-                product_title.setVisibility(View.VISIBLE);
-                product_title.setText(feature);
-            }
+        public void startProductActivity(Context ctx, String post_key) {
+            Intent productIntent = new Intent(ctx, ProductActivity.class);
+            productIntent.putExtra("post_key", post_key);
+            ctx.startActivity(productIntent);
 
         }
 
@@ -152,7 +132,7 @@ public class CategoryFragment extends Fragment {
 
         public void setImage(Context ctx, String image) {
             ImageView category_image = (ImageView) mview.findViewById(R.id.categoryCardImageView);
-            Picasso.with(ctx).load(image).resize(400, 400).placeholder(R.drawable.loading_450).into(category_image);
+            Picasso.with(ctx).load(image).resize(400, 400).placeholder(R.drawable.loading_100).into(category_image);
         }
     }
 }

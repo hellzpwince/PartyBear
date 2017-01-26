@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#F64747</color>
+    <color name="colorOffer">#ffd600</color>
+    <color name="colorOfferDark">#edc802</color>
     <color name="colorPrimaryShade1">#B33434</color>
     <color name="colorPrimaryShade2">#F87979</color>
     <color name="colorPrimaryDark">#DA3F3F</color>
@@ -10,5 +12,7 @@
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#bdbdbd</color>
     <color name="colorWhiteTrans">#60FFFFFF</color>
+    <color name="colorGreyLight">#f9f9f9</color>
+    <color name="colorGreen">#00c853</color>
 
 </resources>

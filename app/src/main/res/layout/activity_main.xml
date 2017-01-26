@@ -25,8 +25,7 @@
                 android:layout_height="?android:actionBarSize"
                 android:background="@color/colorPrimary"
                 android:paddingRight="@dimen/padding_08"
-                app:layout_scrollFlags="scroll|enterAlways">
-            </android.support.v7.widget.Toolbar>
+                app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
         <ProgressBar
@@ -34,8 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:progressTintMode="add"
-            android:secondaryProgressTint="@color/colorPrimary"
+            android:indeterminateTint="@color/colorPrimaryDark"
             android:visibility="visible" />
 
         <android.support.v4.widget.NestedScrollView
@@ -49,6 +47,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorGreyLight"
                 android:orientation="vertical"
                 custom:ignore="ScrollViewSize">
 
@@ -56,20 +55,26 @@
                     android:id="@+id/slider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/image_slider_height"
-                    android:layout_margin="@dimen/padding_08" />
+                    android:layout_margin="@dimen/padding_5" />
 
                 <RelativeLayout
                     android:id="@+id/cake_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorWhite"
+                    android:elevation="1dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
 
                     <TextView
                         android:id="@+id/ocassion_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Cakes for Ocassions"
                         android:textSize="14sp"
@@ -79,6 +84,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:background="@drawable/view_all_btn_bg"
                         android:gravity="end"
                         android:padding="@dimen/padding_5"
@@ -99,8 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ocassion_textview"
-                        android:layout_marginTop="@dimen/padding_08"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                        android:layout_marginTop="@dimen/padding_08">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
@@ -109,14 +116,19 @@
                     android:id="@+id/category2layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorWhite"
+                    android:elevation="1dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
 
                     <TextView
                         android:id="@+id/flowers_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Flowers"
                         android:textSize="14sp"
@@ -126,6 +138,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:background="@drawable/view_all_btn_bg"
                         android:gravity="end"
                         android:padding="@dimen/padding_5"
@@ -146,34 +160,48 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/flowers_textview"
-                        android:layout_marginTop="@dimen/padding_08"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                        android:layout_marginTop="@dimen/padding_08">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/xml_homeBanner2"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/padding_08"
-                    android:layout_marginTop="@dimen/padding_08"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/home_promotional_banner"
-                    android:scaleType="fitCenter" />
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorGreyLight"
+                    android:paddingBottom="@dimen/padding_5"
+                    android:paddingLeft="@dimen/padding_5"
+                    android:paddingRight="@dimen/padding_5"
+                    android:paddingTop="@dimen/padding_5">
+
+                    <ImageView
+                        android:id="@+id/xml_homeBanner2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/home_promotional_banner"
+                        android:scaleType="fitCenter" />
+                </FrameLayout>
 
                 <RelativeLayout
                     android:id="@+id/gift_RLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:padding="@dimen/padding_15"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorWhite"
+                    android:elevation="1dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
 
                     <TextView
                         android:id="@+id/gift_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Gifts"
                         android:textSize="14sp"
@@ -183,6 +211,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
                         android:background="@drawable/view_all_btn_bg"
                         android:gravity="end"
                         android:padding="@dimen/padding_5"
@@ -203,9 +233,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/gift_textview"
-                        android:layout_marginTop="@dimen/padding_08"
-                        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
+                        android:layout_marginTop="@dimen/padding_08">
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
             </LinearLayout>
