@@ -4,6 +4,7 @@ package com.discoverfriend.partybear;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +66,60 @@ public class CategoryFragment extends Fragment {
         mProgress = (ProgressBar) mView.findViewById(R.id.fragmentProgressbarOne);
         rootRef = FirebaseDatabase.getInstance().getReference();
         myquery = rootRef.child("categories").child(categoryid).child("products").orderByPriority();
+        myquery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChildren()) {
+                    mRecycleView.setVisibility(View.GONE);
+                    mProgress.setVisibility(View.GONE);
+                    LinearLayout error_screen = (LinearLayout) mView.findViewById(R.id.error_screen);
+                    error_screen.setVisibility(View.VISIBLE);
+                } else {
 
+                    FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
+                            CategoryModel.class,
+                            R.layout.categorycardview,
+                            CategoryFragment.categoryCardViewHolder.class,
+                            myquery
+                    ) {
+
+                        @Override
+                        protected void populateViewHolder(final CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, final int position) {
+                            final String post_key = getRef(position).getKey();
+                            try {
+                                viewHolder.setTitle(model.getName());
+                                viewHolder.setPrice(model.getPrice());
+                                viewHolder.setEggless(model.getFeature());
+                                viewHolder.setImage(getActivity(), model.getImageurl());
+                                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        viewHolder.startProductActivity(getActivity(), post_key);
+                                    }
+                                });
+
+                            } catch (Exception e) {
+                                Log.e("Try Error", "Grid Category Error Logged.");
+                            }
+                        }
+
+                        @Override
+                        protected void onDataChanged() {
+                            super.onDataChanged();
+                            mProgress.setVisibility(View.GONE);
+                            mRecycleView.setVisibility(View.VISIBLE);
+                        }
+                    };
+
+                    mRecycleView.setAdapter(categoryCardRecycler);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
         LinearLayoutManager linear = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
 
@@ -77,42 +132,6 @@ public class CategoryFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
-                CategoryModel.class,
-                R.layout.categorycardview,
-                CategoryFragment.categoryCardViewHolder.class,
-                myquery
-        ) {
-
-            @Override
-            protected void populateViewHolder(final CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, final int position) {
-                final String post_key = getRef(position).getKey();
-                try {
-                    viewHolder.setTitle(model.getName());
-                    viewHolder.setPrice(model.getPrice());
-                    viewHolder.setEggless(model.getFeature());
-                    viewHolder.setImage(getActivity(), model.getImageurl());
-                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            viewHolder.startProductActivity(getActivity(), post_key);
-                        }
-                    });
-
-                } catch (Exception e) {
-                    Log.e("Try Error", "Grid Category Error Logged.");
-                }
-            }
-
-            @Override
-            protected void onDataChanged() {
-                super.onDataChanged();
-                mProgress.setVisibility(View.GONE);
-                mRecycleView.setVisibility(View.VISIBLE);
-            }
-        };
-
-        mRecycleView.setAdapter(categoryCardRecycler);
 
     }
 
@@ -126,9 +145,14 @@ public class CategoryFragment extends Fragment {
         }
 
         public void startProductActivity(final Context ctx, final String post_key) {
-            final Intent productIntent = new Intent(ctx, ProductActivity.class);
-            productIntent.putExtra("post_key", post_key);
-            ctx.startActivity(productIntent);
+            try {
+                final Intent productIntent = new Intent(ctx, ProductActivity.class);
+                productIntent.putExtra("post_key", post_key);
+                ctx.startActivity(productIntent);
+            } catch (Exception e) {
+                Log.e("Cat Fragment", "Unable to launch post" + post_key);
+                Snackbar.make(mview, "Unable to open item. Please try again!", Snackbar.LENGTH_SHORT).show();
+            }
         }
 
         public void setTitle(String title) {

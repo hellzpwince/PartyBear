@@ -30,13 +30,17 @@ public class CategoryActivity extends AppCompatActivity {
         /*Assign views here*/
         setContentView(R.layout.activity_category);
         /*Assigning Toolbar*/
-        categoryid = getIntent().getExtras().getString("categoryid");
-        categoryname = getIntent().getExtras().getString("categoryname");
-        bundle = new Bundle();
-        bundle.putString("categoryid", categoryid);
-        bundle.putString("categoryname", categoryname);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
-        toolbar.setTitle(categoryname);
+        try {
+            categoryid = getIntent().getExtras().getString("categoryid");
+            categoryname = getIntent().getExtras().getString("categoryname");
+            bundle = new Bundle();
+            bundle.putString("categoryid", categoryid);
+            bundle.putString("categoryname", categoryname);
+            toolbar = (Toolbar) findViewById(R.id.app_bar);
+            toolbar.setTitle(categoryname);
+        } catch (Exception e) {
+            Log.e("CatActiveError", e.getMessage());
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

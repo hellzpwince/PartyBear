@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -34,9 +35,12 @@ import android.widget.Toast;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.discoverfriend.partybear.Product.ProductActivity;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.RuntimeExecutionException;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -61,9 +65,6 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
     SliderLayout sliderShow;
     DatabaseReference rootRef;
-    DatabaseReference databaseRef;
-    DatabaseReference flowerDatabaseRef;
-    DatabaseReference giftDatabaseRef;
     Query flower;
     Query category;
     Query giftQuery;
@@ -89,10 +90,13 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private View hView;
     private ImageView profileImage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final ProgressBar homeProgress = (ProgressBar) findViewById(R.id.homepage_progressbar);
+        homeProgress.setVisibility(View.VISIBLE);
         rootRef = FirebaseDatabase.getInstance().getReference();
         scrollview = (NestedScrollView) findViewById(R.id.scroll_view);
         sliderShow = (SliderLayout) findViewById(R.id.slider);
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 TextView categoryHolder1 = (TextView) findViewById(R.id.ocassion_textview);
                 TextView categoryHolder2 = (TextView) findViewById(R.id.flowers_textview);
                 TextView categoryHolder3 = (TextView) findViewById(R.id.gift_textview);
-                ProgressBar homeProgress = (ProgressBar) findViewById(R.id.homepage_progressbar);
+
                 String category1 = (String) homepageLayout.get("category1name");
                 String category2 = (String) homepageLayout.get("category2name");
                 String category3 = (String) homepageLayout.get("category3name");
@@ -158,19 +162,33 @@ public class MainActivity extends AppCompatActivity {
                 category = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category1type")).limitToFirst(9);
                 flower = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category2type")).limitToFirst(9);
                 giftQuery = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category3type")).limitToFirst(6);
-
-
+                homeProgress.setVisibility(View.GONE);
+                scrollview.setVisibility(View.VISIBLE);
+                try {
         /*Ocassional Cake Recycler View*/
-                LinearLayoutManager layoutManager
-                        = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                LinearLayoutManager flowerLayoutManager
-                        = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                LinearLayoutManager giftLayoutManager
-                        = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    LinearLayoutManager layoutManager
+                            = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    LinearLayoutManager flowerLayoutManager
+                            = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    LinearLayoutManager giftLayoutManager
+                            = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
 
-                myRecycleView.setLayoutManager(layoutManager);
-                flowerRecycleView.setLayoutManager(flowerLayoutManager);
-                giftRecycleView.setLayoutManager(giftLayoutManager);
+                    myRecycleView.setLayoutManager(layoutManager);
+                    flowerRecycleView.setLayoutManager(flowerLayoutManager);
+                    giftRecycleView.setLayoutManager(giftLayoutManager);
+                    myRecycleView.setNestedScrollingEnabled(false);
+                    flowerRecycleView.setNestedScrollingEnabled(false);
+                    giftRecycleView.setNestedScrollingEnabled(false);
+                } catch (Exception e) {
+                    Log.e("Homepage", "Unable to create RecyclerView" + e.getMessage());
+                    View v = findViewById(R.id.category_ItemImage);
+                    Snackbar.make(v, "Opps! Something Went Wrong", Snackbar.LENGTH_SHORT).setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            recreate();
+                        }
+                    });
+                }
 
                 FirebaseRecyclerAdapter<CakeItemModel, categoryViewHolder> firebaseRecycler = new FirebaseRecyclerAdapter<CakeItemModel, categoryViewHolder>(
                         CakeItemModel.class,
@@ -188,10 +206,14 @@ public class MainActivity extends AppCompatActivity {
                         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
-                                categoryIntent.putExtra("categoryid", post_key);
-                                categoryIntent.putExtra("categoryname", post_name);
-                                startActivity(categoryIntent);
+                                try {
+                                    Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
+                                    categoryIntent.putExtra("categoryid", post_key);
+                                    categoryIntent.putExtra("categoryname", post_name);
+                                    startActivity(categoryIntent);
+                                } catch (DatabaseException e) {
+                                    Log.e("DB ERROR", e.getMessage());
+                                }
                             }
                         });
                     }
@@ -212,10 +234,12 @@ public class MainActivity extends AppCompatActivity {
                 ) {
                     @Override
                     protected void populateViewHolder(categoryViewHolder viewHolder, CakeItemModel model, int position) {
+
                         final String post_key = getRef(position).getKey();
                         final String post_name = model.getName();
                         viewHolder.setTitle(model.getName());
                         viewHolder.setOffer(model.getOffer());
+                        View v;
                         viewHolder.setImage(getApplicationContext(), model.getImageurl());
                         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -226,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(categoryIntent);
                             }
                         });
+
                     }
 
                     @Override
@@ -257,21 +282,27 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     protected void populateViewHolder(categoryViewHolder viewHolder, CakeItemModel model, int position) {
+
                         final String post_key = getRef(position).getKey();
                         final String post_name = model.getName();
                         viewHolder.setTitle(model.getName());
                         viewHolder.setOffer(model.getOffer());
                         viewHolder.setImage(getApplicationContext(), model.getImageurl());
                         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
-                                categoryIntent.putExtra("categoryid", post_key);
-                                categoryIntent.putExtra("categoryname", post_name);
-                                startActivity(categoryIntent);
-                            }
-                        });
+                                                                   @Override
+                                                                   public void onClick(View v) {
+                                                                       Intent categoryIntent = new Intent(MainActivity.this, CategoryActivity.class);
+                                                                       categoryIntent.putExtra("categoryid", post_key);
+                                                                       categoryIntent.putExtra("categoryname", post_name);
+                                                                       startActivity(categoryIntent);
+
+                                                                   }
+                                                               }
+
+                        );
+
                     }
+
 
                     @Override
                     protected void onDataChanged() {
@@ -279,8 +310,7 @@ public class MainActivity extends AppCompatActivity {
                         mGiftProgressbar.setVisibility(View.GONE);
                     }
                 };
-                homeProgress.setVisibility(View.GONE);
-                scrollview.setVisibility(View.VISIBLE);
+
                 myRecycleView.setAdapter(firebaseRecycler);
                 flowerRecycleView.setAdapter(flowerFirebaseRecycler);
                 giftRecycleView.setAdapter(giftfirebaseRecycler);

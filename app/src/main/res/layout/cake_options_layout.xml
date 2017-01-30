@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cake_options"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/complete_cakebox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_10"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/complete_Shapebox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_15"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cake_white_24dp"
+                android:tint="@color/colorOfferDark" />
+
+            <TextView
+                android:id="@+id/product_shape"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10"
+                android:text="Select Shape"
+                android:textColor="@color/colorDarkBlack"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shapebox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="@dimen/padding_10"
+            android:layout_marginTop="@dimen/padding_10"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/Product_squareCake"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="@dimen/padding_10"
+                android:background="@drawable/border_bg"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/square"
+                android:tint="@color/colorGrey"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/Product_ovalCake"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="@dimen/padding_10"
+                android:background="@drawable/border_bg"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/oval"
+                android:tint="@color/colorGrey"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/Product_rectangleCake"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="@dimen/padding_10"
+                android:background="@drawable/border_bg"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/rectangle"
+                android:tint="@color/colorGrey"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/Product_heartCake"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="@dimen/padding_10"
+                android:background="@drawable/border_bg"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/like"
+                android:tint="@color/colorGrey"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cake_features"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cake_white_24dp"
+                    android:tint="@color/colorOfferDark" />
+
+                <TextView
+                    android:id="@+id/product_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_10"
+                    android:text="Type"
+                    android:textColor="@color/colorDarkBlack"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_library_books_white_24dp"
+                    android:tint="@color/colorOfferDark" />
+
+                <TextView
+                    android:id="@+id/product_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_10"
+                    android:text="Size (lbs)"
+                    android:textColor="@color/colorDarkBlack"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cake_features_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_15"
+            android:layout_marginTop="@dimen/padding_15"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/spinnertaste"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5"
+                android:layout_weight="1"
+                android:background="@drawable/primary_border_bg"
+                android:padding="@dimen/padding_5"
+                android:spinnerMode="dialog" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5"
+                android:layout_weight="1"
+                android:background="@drawable/primary_border_bg"
+                android:padding="@dimen/padding_5"
+                android:spinnerMode="dialog" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/complete_cakewritebox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_message_white_24dp"
+                android:tint="@color/colorOfferDark" />
+
+            <Switch
+                android:id="@+id/msg_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_5"
+                android:text="Write on Cake"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/product_msgText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_10"
+            android:background="@drawable/offer_border_bg"
+            android:ems="10"
+            android:hint="Type Message Here"
+            android:inputType="textPersonName"
+            android:padding="@dimen/padding_5"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/updateMsgbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorOfferDark"
+            android:padding="@dimen/padding_5"
+            android:text="SET MESSAGE"
+            android:textAlignment="center"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/product_other_qty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/product_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_10"
+            android:text="Qty"
+            android:textColor="@color/colorDarkBlack"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerqty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_5"
+            android:layout_weight="1"
+            android:padding="@dimen/padding_5"
+            android:spinnerMode="dialog" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/padding_5"
+        android:paddingLeft="@dimen/padding_15"
+        android:paddingRight="@dimen/padding_15"
+        android:paddingTop="@dimen/padding_10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_local_shipping_white_24dp"
+                android:tint="@color/colorOfferDark" />
+
+            <TextView
+                android:id="@+id/product_delivery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10"
+                android:text="Delivery"
+                android:textColor="@color/colorDarkBlack"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/product_confirmeddelivery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/padding_10"
+            android:text="Delivery"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btnCal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_5"
+            android:layout_marginBottom="@dimen/padding_10"
+            android:background="@drawable/primary_border_bg"
+            android:padding="@dimen/padding_10"
+            android:text="Select Delivery Date" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_15"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_access_time_white_24dp"
+                android:tint="@color/colorOfferDark" />
+
+            <TextView
+                android:id="@+id/product_delivery_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/padding_10"
+                android:text="Time"
+                android:textColor="@color/colorDarkBlack"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/deliveryspinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="@dimen/padding_5"
+            android:layout_marginTop="@dimen/padding_10"
+            android:layout_weight="1"
+            android:background="@drawable/primary_border_bg"
+            android:padding="@dimen/padding_5"
+            android:spinnerMode="dialog" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add_to_cart_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginTop="@dimen/padding_5"
+        android:background="@color/colorPrimaryDark"
+        android:padding="@dimen/padding_5"
+        android:text="Add to Cart"
+        android:textColor="@color/colorWhite" />
+</LinearLayout>
