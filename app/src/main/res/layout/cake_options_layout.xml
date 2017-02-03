@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <LinearLayout
         android:id="@+id/complete_cakebox"
         android:layout_width="match_parent"
@@ -56,7 +55,8 @@
                 android:padding="@dimen/padding_10"
                 android:src="@drawable/square"
                 android:tint="@color/colorGrey"
-                android:visibility="gone" />
+                android:visibility="visible"
+                android:alpha="0"/>
 
             <ImageView
                 android:id="@+id/Product_ovalCake"
@@ -67,7 +67,8 @@
                 android:padding="@dimen/padding_10"
                 android:src="@drawable/oval"
                 android:tint="@color/colorGrey"
-                android:visibility="gone" />
+                android:visibility="visible"
+                android:alpha="0" />
 
             <ImageView
                 android:id="@+id/Product_rectangleCake"
@@ -78,7 +79,8 @@
                 android:padding="@dimen/padding_10"
                 android:src="@drawable/rectangle"
                 android:tint="@color/colorGrey"
-                android:visibility="gone" />
+                android:visibility="visible"
+                android:alpha="0" />
 
             <ImageView
                 android:id="@+id/Product_heartCake"
@@ -89,7 +91,8 @@
                 android:padding="@dimen/padding_10"
                 android:src="@drawable/like"
                 android:tint="@color/colorGrey"
-                android:visibility="gone" />
+                android:visibility="visible"
+                android:alpha="0" />
 
         </LinearLayout>
 

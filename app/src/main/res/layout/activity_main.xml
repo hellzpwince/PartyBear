@@ -20,12 +20,12 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/app_bar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
                 android:background="@color/colorPrimary"
                 android:paddingRight="@dimen/padding_08"
-                app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
+                app:layout_scrollFlags="scroll|enterAlways" />
         </android.support.design.widget.AppBarLayout>
 
         <ProgressBar
@@ -34,11 +34,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="visible" />
+
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:alpha="0"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             custom:ignore="ObsoleteLayoutParam">
 
@@ -75,10 +76,11 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Cakes for Ocassions"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/cat_view_all"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -90,7 +92,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/ocassion_progressbar"
@@ -105,9 +107,49 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ocassion_textview"
-                        android:layout_marginTop="@dimen/padding_08">
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0" />
+                </RelativeLayout>
 
-                    </android.support.v7.widget.RecyclerView>
+                <RelativeLayout
+                    android:id="@+id/handpicked_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorWhite"
+                    android:elevation="1dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
+
+                    <TextView
+                        android:id="@+id/handpicked_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:padding="@dimen/padding_5"
+                        android:text="Chief's Choice"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ProgressBar
+                        android:id="@+id/handpicked_progressbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/handpicked_textview"
+                        android:layout_marginTop="@dimen/padding_20"
+                        android:visibility="visible" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/handpicked_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/handpicked_textview"
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0"
+                        android:nestedScrollingEnabled="false" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -129,10 +171,11 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Flowers"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/cat2_view_all"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -143,7 +186,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/flowers_progressbar"
@@ -158,7 +201,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/flowers_textview"
-                        android:layout_marginTop="@dimen/padding_08">
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0">
 
                     </android.support.v7.widget.RecyclerView>
                 </RelativeLayout>
@@ -202,10 +246,11 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Gifts"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/cat3_view_all"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
@@ -216,7 +261,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/gift_progressbar"
@@ -231,11 +276,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/gift_textview"
-                        android:layout_marginTop="@dimen/padding_08">
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0" />
                 </RelativeLayout>
+
+
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
@@ -248,6 +296,6 @@
         app:headerLayout="@layout/navi_header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="@color/colorWhite"
-        app:menu="@menu/navigation_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/navigation_menu" />
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,5 +1,4 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,30 +7,38 @@
     <!-- TODO: Update blank fragment layout -->
     <ProgressBar
         android:id="@+id/fragmentProgressbarOne"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminateTint="@color/colorPrimary"
         android:visibility="visible" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragOneRV_xml"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"></android.support.v7.widget.RecyclerView>
+        android:alpha="0"/>
 
     <LinearLayout
         android:id="@+id/error_screen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/splash_xhdpi" />
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/wedding_cake"
+            android:tint="@color/colorGrey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Opps! Nothing Found"
+            android:textColor="@color/colorGrey" />
     </LinearLayout>
 
 </FrameLayout>

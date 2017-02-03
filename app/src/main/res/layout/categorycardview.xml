@@ -47,7 +47,8 @@
             android:paddingLeft="@dimen/padding_15"
             android:paddingRight="@dimen/padding_5"
             android:textColor="@color/colorWhite"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/eggstatus"

@@ -27,4 +27,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_product">Product Loading</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_order_layout">OrderLayoutActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_list">ListActivity</string>
+    <string name="title_activity_delivery">Delivery Address</string>
+    <string name="set_address">SET ADDRESS</string>
 </resources>

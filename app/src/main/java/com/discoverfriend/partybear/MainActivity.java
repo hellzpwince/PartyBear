@@ -2,10 +2,7 @@ package com.discoverfriend.partybear;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
@@ -15,7 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,27 +20,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.discoverfriend.partybear.Product.ProductActivity;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
+import com.discoverfriend.partybear.Seperate_list.ListActivity;
+import com.discoverfriend.partybear.category.CategoryModel;
+import com.discoverfriend.partybear.order_processing.OrderLayoutActivity;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.google.android.gms.tasks.RuntimeExecutionException;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -52,22 +48,17 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.onurciner.toastox.ToastOX;
-import com.onurciner.toastox.ToastOXDialog;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     SliderLayout sliderShow;
     DatabaseReference rootRef;
     Query flower;
     Query category;
-    Query giftQuery;
+    Query giftQuery,myquery;
     FirebaseUser user;
     Menu hmenu;
     MenuItem item;
@@ -87,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView homeBanner2;
     private TextView profileName;
     private FirebaseAuth mAuth;
+    RecyclerView mRecycleView;
+    ProgressBar mProgress;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private View hView;
     private ImageView profileImage;
@@ -97,6 +90,70 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final ProgressBar homeProgress = (ProgressBar) findViewById(R.id.homepage_progressbar);
         homeProgress.setVisibility(View.VISIBLE);
+        mRecycleView = (RecyclerView) findViewById(R.id.handpicked_recycleView);
+        mProgress = (ProgressBar) findViewById(R.id.handpicked_progressbar);
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        myquery = rootRef.child("categories").child("handpicked").child("products").orderByPriority();
+        myquery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.hasChildren()) {
+                    mRecycleView.setVisibility(View.GONE);
+                    mProgress.setVisibility(View.GONE);
+                    RelativeLayout error_screen = (RelativeLayout) findViewById(R.id.handpicked_layout);
+                    error_screen.setVisibility(View.GONE);
+                } else {
+
+                    FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
+                            CategoryModel.class,
+                            R.layout.grid_cardview,
+                            CategoryFragment.categoryCardViewHolder.class,
+                            myquery
+                    ) {
+
+                        @Override
+                        protected void populateViewHolder(final CategoryFragment.categoryCardViewHolder viewHolder, CategoryModel model, final int position) {
+                            final String post_key = getRef(position).getKey();
+                            try {
+
+                                viewHolder.setTitle(model.getName());
+                                viewHolder.setPrice(model.getPrice());
+                                viewHolder.setImage(MainActivity.this, model.getImageurl());
+                                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        viewHolder.startProductActivity(MainActivity.this, post_key);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.e("Try Error", "Grid Category Error Logged.");
+                            }
+                        }
+
+                        @Override
+                        protected void onDataChanged() {
+                            super.onDataChanged();
+                        }
+                    };
+
+                    mRecycleView.setAdapter(categoryCardRecycler);
+                    GridLayoutManager grid = new GridLayoutManager(MainActivity.this, 2);
+                    mProgress.setVisibility(View.GONE);
+                    ViewAnimator.animate(mRecycleView).alpha(100).fadeIn().duration(300).start();
+                    mRecycleView.setLayoutManager(grid);
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         rootRef = FirebaseDatabase.getInstance().getReference();
         scrollview = (NestedScrollView) findViewById(R.id.scroll_view);
         sliderShow = (SliderLayout) findViewById(R.id.slider);
@@ -123,8 +180,27 @@ public class MainActivity extends AppCompatActivity {
                                     public void onSliderClick(BaseSliderView slider) {
 
                                         if (slide.hasChild("link")) {
-                                            //TODO: Update Slider Link
-                                            ToastOX.info(getApplicationContext(), (String) slide.child("link").getValue(), Toast.LENGTH_SHORT);
+                                            String type_check = String.valueOf(slide.child("type").getValue());
+                                            if (type_check.equals("product")) {
+                                                Log.e("Link", "is product");
+                                                String productlink = String.valueOf(slide.child("link").getValue());
+                                                Intent activity = new Intent(MainActivity.this, ProductActivity.class);
+                                                activity.putExtra("post_key", productlink);
+                                                startActivity(activity);
+
+                                            } else if (type_check.equals("category")) {
+                                                String productid = String.valueOf(slide.child("type").getValue());
+                                                String productname = String.valueOf(slide.child("name").getValue());
+                                                String productlink = String.valueOf(slide.child("link").getValue());
+                                                Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                                                activity.putExtra("type", productid);
+                                                activity.putExtra("name", productname);
+                                                activity.putExtra("link", productlink);
+                                                startActivity(activity);
+                                            } else {
+                                                Log.e("Hero Slider Link", type_check + " Not found");
+                                                Snackbar.make(getCurrentFocus(), "Sorry! This Item is not available right now!", Snackbar.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                 }));
@@ -153,17 +229,53 @@ public class MainActivity extends AppCompatActivity {
                 TextView categoryHolder2 = (TextView) findViewById(R.id.flowers_textview);
                 TextView categoryHolder3 = (TextView) findViewById(R.id.gift_textview);
 
-                String category1 = (String) homepageLayout.get("category1name");
-                String category2 = (String) homepageLayout.get("category2name");
-                String category3 = (String) homepageLayout.get("category3name");
+                final String category1 = (String) homepageLayout.get("category1name");
+                final String category2 = (String) homepageLayout.get("category2name");
+                final String category3 = (String) homepageLayout.get("category3name");
+                TextView viewall_1 = (TextView) findViewById(R.id.cat_view_all);
+                TextView viewall_2 = (TextView) findViewById(R.id.cat2_view_all);
+                TextView viewall_3 = (TextView) findViewById(R.id.cat3_view_all);
+                viewall_1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent activity = new Intent(MainActivity.this, ViewAllActivity.class);
+                        activity.putExtra("type", (String) homepageLayout.get("category1type"));
+                        activity.putExtra("name", category1);
+                        activity.putExtra("viewall", category1);
+                        activity.putExtra("link", (String) homepageLayout.get("category1type"));
+                        startActivity(activity);
+                    }
+                });
+                viewall_2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent activity = new Intent(MainActivity.this, ViewAllActivity.class);
+                        activity.putExtra("type", (String) homepageLayout.get("category2type"));
+                        activity.putExtra("name", category2);
+                        activity.putExtra("viewall", category2);
+                        activity.putExtra("link", (String) homepageLayout.get("category2type"));
+                        startActivity(activity);
+                    }
+                });
+                viewall_3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent activity = new Intent(MainActivity.this, ViewAllActivity.class);
+                        activity.putExtra("type", (String) homepageLayout.get("category3type"));
+                        activity.putExtra("name", category3);
+                        activity.putExtra("viewall", category3);
+                        activity.putExtra("link", (String) homepageLayout.get("category3type"));
+                        startActivity(activity);
+                    }
+                });
                 categoryHolder1.setText(category1);
                 categoryHolder2.setText(category2);
                 categoryHolder3.setText(category3);
                 category = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category1type")).limitToFirst(9);
                 flower = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category2type")).limitToFirst(9);
-                giftQuery = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category3type")).limitToFirst(6);
+                giftQuery = rootRef.child("categories").orderByChild("type").equalTo((String) homepageLayout.get("category3type")).limitToFirst(9);
                 homeProgress.setVisibility(View.GONE);
-                scrollview.setVisibility(View.VISIBLE);
+                ViewAnimator.animate(scrollview).alpha(100).duration(200).fadeIn().start();
                 try {
         /*Ocassional Cake Recycler View*/
                     LinearLayoutManager layoutManager
@@ -222,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
                     protected void onDataChanged() {
                         super.onDataChanged();
                         mCakeProgressbar.setVisibility(View.GONE);
+                        ViewAnimator.animate(myRecycleView).alpha(100).duration(300).newsPaper().start();
                     }
                 };
 
@@ -257,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
                     protected void onDataChanged() {
                         super.onDataChanged();
                         mFlowerProgressbar.setVisibility(View.GONE);
+                        ViewAnimator.animate(flowerRecycleView).alpha(100).duration(300).newsPaper().start();
                     }
                 };
                 FirebaseRecyclerAdapter<CakeItemModel, categoryViewHolder> giftfirebaseRecycler = new FirebaseRecyclerAdapter<CakeItemModel, categoryViewHolder>(
@@ -308,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
                     protected void onDataChanged() {
                         super.onDataChanged();
                         mGiftProgressbar.setVisibility(View.GONE);
+                        ViewAnimator.animate(flowerRecycleView).alpha(100).duration(300).newsPaper().start();
                     }
                 };
 
@@ -323,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         nav_view = (NavigationView) findViewById(R.id.navi_drawer);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         profileName = (TextView) findViewById(R.id.ocassion_textview);
         hmenu = nav_view.getMenu();
         item = hmenu.findItem(R.id.menu_logout);
@@ -358,9 +473,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting Toolbar as Actionbar and Enabling Home Button
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
         setup((DrawerLayout) findViewById(R.id.xml_drawer), toolbar);
         scrollview.setVerticalScrollBarEnabled(false);
         //Hiding Scrollbar from navigation Drawer
@@ -373,42 +490,85 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         int id = item.getItemId();
-                        if (id == R.id.menu_account) {
-                            Toast.makeText(MainActivity.this, "Account", Toast.LENGTH_SHORT).show();
-
-                        }
-                        if (id == R.id.menu_buyCakes) {
+                        if (id == R.id.action_shopping_cart) {
                             Toast.makeText(MainActivity.this, "Buy A Cake", Toast.LENGTH_SHORT).show();
                         }
+                        if (id == R.id.menu_buyCakes) {
+                            String productid = "cake";
+                            String productname = "Cakes";
+                            String productlink = "cake";
+                            Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                            activity.putExtra("type", productid);
+                            activity.putExtra("name", productname);
+                            activity.putExtra("link", productlink);
+                            startActivity(activity);
+
+                        }
                         if (id == R.id.menu_buyGifts) {
-                            Toast.makeText(MainActivity.this, "Buy A Gift", Toast.LENGTH_SHORT).show();
+                            String productid = "gift";
+                            String productname = "Gifts";
+                            String productlink = "gift";
+                            Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                            activity.putExtra("type", productid);
+                            activity.putExtra("name", productname);
+                            activity.putExtra("link", productlink);
+                            startActivity(activity);
                         }
                         if (id == R.id.menu_flowers) {
-                            Toast.makeText(MainActivity.this, "Buy Flowers", Toast.LENGTH_SHORT).show();
-                        }
-                        if (id == R.id.menu_Home) {
-                            Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
+                            String productid = "flower";
+                            String productname = "Flowers";
+                            String productlink = "gift";
+                            Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                            activity.putExtra("type", productid);
+                            activity.putExtra("name", productname);
+                            activity.putExtra("link", productlink);
+                            startActivity(activity);
                         }
                         if (id == R.id.menu_bowerbird) {
-                            Toast.makeText(MainActivity.this, "Bowerbird", Toast.LENGTH_SHORT).show();
-                        }
-                        if (id == R.id.menu_wallet) {
-                            Toast.makeText(MainActivity.this, "My Wallet", Toast.LENGTH_SHORT).show();
+                            String productid = "bowerbird";
+                            String productname = "Bowerbird";
+                            String productlink = "bowerbird";
+                            Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                            activity.putExtra("type", productid);
+                            activity.putExtra("name", productname);
+                            activity.putExtra("link", productlink);
+                            startActivity(activity);
+
                         }
                         if (id == R.id.menu_wishList) {
-                            Toast.makeText(MainActivity.this, "My Wishlist", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                Intent wishlist = new Intent(MainActivity.this, OrderLayoutActivity.class);
+                                wishlist.putExtra("position", 1);
+                                startActivity(wishlist);
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access your Wishlist!", Snackbar.LENGTH_SHORT).show();
+                            }
+
                         }
                         if (id == R.id.menu_myOrders) {
-                            Toast.makeText(MainActivity.this, "My Orders", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                startActivity(new Intent(MainActivity.this, OrderLayoutActivity.class));
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+                            }
+
+
                         }
                         if (id == R.id.menu_delivery) {
-                            Toast.makeText(MainActivity.this, "Delivery", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                Intent wishlist = new Intent(MainActivity.this, DeliveryActivity.class);
+                                startActivity(wishlist);
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access Delivery Options", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                         if (id == R.id.menu_help) {
-                            Toast.makeText(MainActivity.this, "Help and Support", Toast.LENGTH_SHORT).show();
-                        }
-                        if (id == R.id.menu_rateus) {
-                            Toast.makeText(MainActivity.this, "Rate Our App", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                Intent wishlist = new Intent(MainActivity.this, Feedback.class);
+                                startActivity(wishlist);
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access Feedback Form", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                         if (id == R.id.menu_logout) {
                             if (user != null)
@@ -505,7 +665,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (id == R.id.action_shopping_cart) {
+            if (mAuth.getCurrentUser() != null) {
+                startActivity(new Intent(MainActivity.this, MyCart.class));
+            } else {
+                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+            }
+        }
         return super.onOptionsItemSelected(item);
+
     }
 
     /*ViewHolder Class for Category Class*/

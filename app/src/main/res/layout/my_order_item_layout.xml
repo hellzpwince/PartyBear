@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorWhite"
+    android:clipToPadding="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_10">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/order_name1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_5"
+                android:layout_marginLeft="@dimen/padding_15"
+                android:layout_weight="1"
+                android:text="Loading"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorDarkBlack" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/order_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_5"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_10"
+                android:text="Loading"
+                android:textSize="10sp"
+                android:textColor="@color/colorDarkBlack" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/ic_account_balance_wallet_white_24dp"
+                android:tint="@color/colorGrey" />
+
+            <TextView
+                android:id="@+id/order_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_5"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_10"
+                android:text="Loading"
+                android:textSize="10sp"
+                android:textColor="@color/colorDarkBlack" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_10"
+                android:src="@drawable/ic_access_time_white_24dp"
+                android:tint="@color/colorGrey" />
+
+            <TextView
+                android:id="@+id/order_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_10"
+                android:layout_weight="1"
+                android:padding="@dimen/padding_10"
+                android:text="Loading"
+                android:textSize="10sp"
+                android:textColor="@color/colorDarkBlack" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGreyLight" />
+</android.support.v7.widget.CardView>

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,24 +16,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.discoverfriend.partybear.Product.ProductActivity;
 import com.discoverfriend.partybear.category.CategoryModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.ChildEventListener;
+import com.github.florent37.viewanimator.ViewAnimator;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.roughike.bottombar.BottomBar;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -108,6 +101,7 @@ public class CategoryFragment extends Fragment {
                             super.onDataChanged();
                             mProgress.setVisibility(View.GONE);
                             mRecycleView.setVisibility(View.VISIBLE);
+                            ViewAnimator.animate(mRecycleView).alpha(100).duration(300).fadeIn().start();
                         }
                     };
 
@@ -155,6 +149,18 @@ public class CategoryFragment extends Fragment {
             }
         }
 
+        public void startCategoryActivity(final Context ctx, final String post_key, final String catname) {
+            try {
+                final Intent productIntent = new Intent(ctx, CategoryActivity.class);
+                productIntent.putExtra("categoryid", post_key);
+                productIntent.putExtra("categoryname", catname);
+                ctx.startActivity(productIntent);
+            } catch (Exception e) {
+                Log.e("Cat Fragment", "Unable to launch post" + post_key);
+                Snackbar.make(mview, "Unable to open item. Please try again!", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+
         public void setTitle(String title) {
             TextView product_title = (TextView) mview.findViewById(R.id.categoryCardTitle);
             product_title.setText(title);
@@ -171,6 +177,7 @@ public class CategoryFragment extends Fragment {
 
         public void setPrice(int price) {
             TextView product_price = (TextView) mview.findViewById(R.id.categoryCardPrice);
+            product_price.setVisibility(View.VISIBLE);
             product_price.setText("Rs " + price + "/-");
         }
 
