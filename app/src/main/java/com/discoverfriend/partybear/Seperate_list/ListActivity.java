@@ -1,21 +1,22 @@
-package com.discoverfriend.partybear;
+package com.discoverfriend.partybear.Seperate_list;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.discoverfriend.partybear.CategoryFragment;
 import com.discoverfriend.partybear.Product.ProductActivity;
+import com.discoverfriend.partybear.R;
 import com.discoverfriend.partybear.category.CategoryModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DataSnapshot;
@@ -26,44 +27,41 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by mukesh on 25/01/17.
- */
-
-public class GridCategoryFragment extends Fragment {
-
+public class ListActivity extends AppCompatActivity {
+    String itemtype, itemlink, itemname;
     DatabaseReference rootRef;
-    String categoryid;
-    String categoryname;
     Query myquery;
     private View mView;
     private RecyclerView mRecycleView;
     private ProgressBar mProgress;
 
-    public GridCategoryFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_category, container, false);
-        categoryid = (String) getArguments().get("categoryid");
-        categoryname = (String) getArguments().get("categoryname");
-        this.mView = view;
-        mRecycleView = (RecyclerView) mView.findViewById(R.id.fragOneRV_xml);
-        mProgress = (ProgressBar) mView.findViewById(R.id.fragmentProgressbarOne);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_list);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            itemlink = extras.getString("link");
+            itemname = extras.getString("name");
+            itemtype = extras.getString("type");
+            Toast.makeText(this, itemlink, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, itemtype, Toast.LENGTH_SHORT).show();
+        }
+        setupToolbar(itemname);
+
+        mRecycleView = (RecyclerView) findViewById(R.id.fragOneRV_xml);
+        mProgress = (ProgressBar) findViewById(R.id.progress_listactivity);
         rootRef = FirebaseDatabase.getInstance().getReference();
-        myquery = rootRef.child("categories").child(categoryid).child("products").orderByPriority();
+        myquery = rootRef.child("categories").child(itemlink).child("products").orderByPriority();
         myquery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (!dataSnapshot.hasChildren()) {
                     mRecycleView.setVisibility(View.GONE);
                     mProgress.setVisibility(View.GONE);
-                    LinearLayout error_screen = (LinearLayout) mView.findViewById(R.id.error_screen);
-                    error_screen.setVisibility(View.VISIBLE);
+                    setContentView(R.layout.nothing_found);
+                    setupToolbar(itemname);
+
                 } else {
 
                     FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
@@ -80,11 +78,11 @@ public class GridCategoryFragment extends Fragment {
 
                                 viewHolder.setTitle(model.getName());
                                 viewHolder.setPrice(model.getPrice());
-                                viewHolder.setImage(getActivity(), model.getImageurl());
+                                viewHolder.setImage(ListActivity.this, model.getImageurl());
                                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        viewHolder.startProductActivity(getActivity(), post_key);
+                                        viewHolder.startProductActivity(ListActivity.this, post_key);
                                     }
                                 });
                             } catch (Exception e) {
@@ -95,13 +93,14 @@ public class GridCategoryFragment extends Fragment {
                         @Override
                         protected void onDataChanged() {
                             super.onDataChanged();
+                            mProgress.setVisibility(View.GONE);
+                            mRecycleView.setVisibility(View.VISIBLE);
                         }
                     };
 
                     mRecycleView.setAdapter(categoryCardRecycler);
-                    GridLayoutManager grid = new GridLayoutManager(getActivity().getApplicationContext(), 2);
-                    mProgress.setVisibility(View.GONE);
-                    mRecycleView.setVisibility(View.VISIBLE);
+                    GridLayoutManager grid = new GridLayoutManager(getApplicationContext(), 2);
+
                     mRecycleView.setLayoutManager(grid);
 
                 }
@@ -114,18 +113,18 @@ public class GridCategoryFragment extends Fragment {
 
             }
         });
-
-        return mView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
+    public void setupToolbar(String title) {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(title);
+        }
     }
 
-    /*ViewHolder Class for Category Class*/
+
     public static class categoryCardViewHolder extends RecyclerView.ViewHolder {
         View mview;
 

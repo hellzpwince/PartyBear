@@ -20,12 +20,12 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/app_bar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:actionBarSize"
                 android:background="@color/colorPrimary"
                 android:paddingRight="@dimen/padding_08"
-                app:layout_scrollFlags="scroll|enterAlways"></android.support.v7.widget.Toolbar>
+                app:layout_scrollFlags="scroll|enterAlways" />
         </android.support.design.widget.AppBarLayout>
 
         <ProgressBar
@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:visibility="visible" />
+
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
             android:layout_width="match_parent"
@@ -75,7 +76,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Cakes for Ocassions"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -90,7 +91,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/ocassion_progressbar"
@@ -129,7 +130,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Flowers"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -143,7 +144,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/flowers_progressbar"
@@ -202,7 +203,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Gifts"
-                        android:textSize="14sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -216,7 +217,7 @@
                         android:padding="@dimen/padding_5"
                         android:text="View All"
                         android:textColor="@color/colorWhite"
-                        android:textSize="8sp" />
+                        android:textSize="12sp" />
 
                     <ProgressBar
                         android:id="@+id/gift_progressbar"
@@ -231,8 +232,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/gift_textview"
-                        android:layout_marginTop="@dimen/padding_08">
-                    </android.support.v7.widget.RecyclerView>
+                        android:layout_marginTop="@dimen/padding_08" />
                 </RelativeLayout>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
@@ -248,6 +248,6 @@
         app:headerLayout="@layout/navi_header"
         app:itemIconTint="@color/colorPrimary"
         app:itemTextColor="@color/colorWhite"
-        app:menu="@menu/navigation_menu"></android.support.design.widget.NavigationView>
+        app:menu="@menu/navigation_menu" />
 
 </android.support.v4.widget.DrawerLayout>

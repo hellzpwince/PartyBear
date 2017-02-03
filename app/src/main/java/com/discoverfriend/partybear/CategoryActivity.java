@@ -1,19 +1,21 @@
 package com.discoverfriend.partybear;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.discoverfriend.partybear.category.FragmentAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
-
-import static android.R.attr.fragment;
-import static android.R.attr.value;
 
 public class CategoryActivity extends AppCompatActivity {
     Bundle bundle;
@@ -22,11 +24,13 @@ public class CategoryActivity extends AppCompatActivity {
     private String categoryname;
     private Toolbar toolbar;
     private ViewPager mViewpager;
+    FirebaseAuth mAuth;
     private FragmentAdapter mFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         /*Assign views here*/
         setContentView(R.layout.activity_category);
         /*Assigning Toolbar*/
@@ -36,15 +40,16 @@ public class CategoryActivity extends AppCompatActivity {
             bundle = new Bundle();
             bundle.putString("categoryid", categoryid);
             bundle.putString("categoryname", categoryname);
-            toolbar = (Toolbar) findViewById(R.id.app_bar);
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
             toolbar.setTitle(categoryname);
         } catch (Exception e) {
             Log.e("CatActiveError", e.getMessage());
         }
         setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         NestedScrollView scrollView = (NestedScrollView) findViewById(R.id.categoryscroll_view);
         scrollView.setVerticalScrollBarEnabled(false);
         scrollView.setFillViewport(true);
@@ -91,4 +96,24 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_shopping_cart) {
+            if (mAuth.getCurrentUser() != null) {
+                startActivity(new Intent(CategoryActivity.this, MyCart.class));
+            } else {
+                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

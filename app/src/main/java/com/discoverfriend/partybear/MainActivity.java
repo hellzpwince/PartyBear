@@ -2,10 +2,7 @@ package com.discoverfriend.partybear;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.internal.NavigationMenuView;
 import android.support.design.widget.NavigationView;
@@ -15,7 +12,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,27 +19,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.ConsoleMessage;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.discoverfriend.partybear.Product.ProductActivity;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
+import com.discoverfriend.partybear.Seperate_list.ListActivity;
+import com.discoverfriend.partybear.order_processing.OrderLayoutActivity;
 import com.facebook.login.LoginManager;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.RuntimeExecutionException;
-import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
@@ -52,15 +43,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.onurciner.toastox.ToastOX;
-import com.onurciner.toastox.ToastOXDialog;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     SliderLayout sliderShow;
@@ -123,8 +109,28 @@ public class MainActivity extends AppCompatActivity {
                                     public void onSliderClick(BaseSliderView slider) {
 
                                         if (slide.hasChild("link")) {
-                                            //TODO: Update Slider Link
-                                            ToastOX.info(getApplicationContext(), (String) slide.child("link").getValue(), Toast.LENGTH_SHORT);
+                                            String type_check = String.valueOf(slide.child("type").getValue());
+                                            Log.e("Link", "Has Link");
+                                            if (type_check.equals("product")) {
+                                                Log.e("Link", "is product");
+                                                String productlink = String.valueOf(slide.child("link").getValue());
+                                                Intent activity = new Intent(MainActivity.this, ProductActivity.class);
+                                                activity.putExtra("post_key", productlink);
+                                                startActivity(activity);
+
+                                            } else if (type_check.equals("category")) {
+                                                String productid = String.valueOf(slide.child("type").getValue());
+                                                String productname = String.valueOf(slide.child("name").getValue());
+                                                String productlink = String.valueOf(slide.child("link").getValue());
+                                                Intent activity = new Intent(MainActivity.this, ListActivity.class);
+                                                activity.putExtra("type", productid);
+                                                activity.putExtra("name", productname);
+                                                activity.putExtra("link", productlink);
+                                                startActivity(activity);
+                                            } else {
+                                                Log.e("Hero Slider Link", type_check + " Not found");
+                                                Snackbar.make(getCurrentFocus(), "Sorry! This Item is not available right now!", Snackbar.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
                                 }));
@@ -323,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         nav_view = (NavigationView) findViewById(R.id.navi_drawer);
-        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         profileName = (TextView) findViewById(R.id.ocassion_textview);
         hmenu = nav_view.getMenu();
         item = hmenu.findItem(R.id.menu_logout);
@@ -358,9 +364,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Setting Toolbar as Actionbar and Enabling Home Button
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+        }
         setup((DrawerLayout) findViewById(R.id.xml_drawer), toolbar);
         scrollview.setVerticalScrollBarEnabled(false);
         //Hiding Scrollbar from navigation Drawer
@@ -373,9 +381,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         int id = item.getItemId();
-                        if (id == R.id.menu_account) {
-                            Toast.makeText(MainActivity.this, "Account", Toast.LENGTH_SHORT).show();
-
+                        if (id == R.id.action_shopping_cart) {
+                            Toast.makeText(MainActivity.this, "Buy A Cake", Toast.LENGTH_SHORT).show();
                         }
                         if (id == R.id.menu_buyCakes) {
                             Toast.makeText(MainActivity.this, "Buy A Cake", Toast.LENGTH_SHORT).show();
@@ -386,29 +393,38 @@ public class MainActivity extends AppCompatActivity {
                         if (id == R.id.menu_flowers) {
                             Toast.makeText(MainActivity.this, "Buy Flowers", Toast.LENGTH_SHORT).show();
                         }
-                        if (id == R.id.menu_Home) {
-                            Toast.makeText(MainActivity.this, "Home", Toast.LENGTH_SHORT).show();
-                        }
                         if (id == R.id.menu_bowerbird) {
                             Toast.makeText(MainActivity.this, "Bowerbird", Toast.LENGTH_SHORT).show();
                         }
-                        if (id == R.id.menu_wallet) {
-                            Toast.makeText(MainActivity.this, "My Wallet", Toast.LENGTH_SHORT).show();
-                        }
                         if (id == R.id.menu_wishList) {
-                            Toast.makeText(MainActivity.this, "My Wishlist", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                Intent wishlist = new Intent(MainActivity.this, OrderLayoutActivity.class);
+                                wishlist.putExtra("position", 1);
+                                startActivity(wishlist);
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access your Wishlist!", Snackbar.LENGTH_SHORT).show();
+                            }
+
                         }
                         if (id == R.id.menu_myOrders) {
-                            Toast.makeText(MainActivity.this, "My Orders", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                startActivity(new Intent(MainActivity.this, OrderLayoutActivity.class));
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+                            }
+
+
                         }
                         if (id == R.id.menu_delivery) {
-                            Toast.makeText(MainActivity.this, "Delivery", Toast.LENGTH_SHORT).show();
+                            if (mAuth.getCurrentUser() != null) {
+                                Intent wishlist = new Intent(MainActivity.this, DeliveryActivity.class);
+                                startActivity(wishlist);
+                            } else {
+                                Snackbar.make(getCurrentFocus(), "Login to access Delivery Options", Snackbar.LENGTH_SHORT).show();
+                            }
                         }
                         if (id == R.id.menu_help) {
                             Toast.makeText(MainActivity.this, "Help and Support", Toast.LENGTH_SHORT).show();
-                        }
-                        if (id == R.id.menu_rateus) {
-                            Toast.makeText(MainActivity.this, "Rate Our App", Toast.LENGTH_SHORT).show();
                         }
                         if (id == R.id.menu_logout) {
                             if (user != null)
@@ -505,7 +521,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (id == R.id.action_shopping_cart) {
+            if (mAuth.getCurrentUser() != null) {
+                startActivity(new Intent(MainActivity.this, MyCart.class));
+            } else {
+                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+            }
+        }
         return super.onOptionsItemSelected(item);
+
     }
 
     /*ViewHolder Class for Category Class*/
