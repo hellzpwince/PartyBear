@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/action_top_wishlist"
+        android:icon="@drawable/ic_favorite_border_white_24dp"
+        android:title="Wishlist"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_shopping_cart"
         android:icon="@drawable/ic_shopping_cart_white_24dp"
         android:title="My Cart"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>

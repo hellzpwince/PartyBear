@@ -2,48 +2,73 @@ package com.discoverfriend.partybear;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ButtonBarLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cocosw.bottomsheet.BottomSheet;
+import com.darsh.multipleimageselect.activities.AlbumSelectActivity;
+import com.darsh.multipleimageselect.models.Image;
 import com.discoverfriend.partybear.cart.CartModel;
 import com.discoverfriend.partybear.cart.CartViewHolder;
 import com.discoverfriend.partybear.checkout.CheckoutAcitivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.florent37.viewanimator.ViewAnimator;
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.instamojo.android.Instamojo;
 import com.instamojo.android.activities.PaymentDetailsActivity;
 import com.instamojo.android.callbacks.OrderRequestCallBack;
 import com.instamojo.android.helpers.Constants;
 import com.instamojo.android.models.Errors;
 import com.instamojo.android.models.Order;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.onurciner.toastox.ToastOX;
+import com.yarolegovich.lovelydialog.LovelyCustomDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,40 +86,152 @@ public class MyCart extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private RecyclerView rc_view;
     DatabaseReference root;
-    private long total = 0;
+    private long total = 0, cod = 0;
+    private long realtotal = 0, percent = 0, couponType = 0;
     TextView totalview;
     private ProgressDialog dialog;
     Button btn_checkout;
     String mPhone = null;
-    String mPurpose = "PartyBear ";
+    String mPurpose = "", couponCodeString, specialnote = "";
     String accessToken;
     String transactionID = randomString(50);
-    private int Transaction_status = 0;
+    private int Transaction_status = 0, COUPON_APPLIED = 0, HAS_IMAGES = 0, REQUIRE_IMAGES = 0;
     String time;
-    String useremail = "partybear@gmail.com";
-    ProgressBar cart_progress;
+    Query myquery;
+    String useremail = "pooja@partybear.in";
+    SpinKitView cart_progress;
     NestedScrollView nestedview;
     String username = "";
     String postpaymentid;
     static final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     static SecureRandom rnd = new SecureRandom();
     String postPaymentStatus;
+    String dAddress = "";
+    LinearLayoutManager linear;
+    ValueEventListener myQueryListener;
+    ChildEventListener myQueryListener2;
+    FirebaseAnalytics mFirebaseAnalytics;
+    TextView coupontext;
+    ButtonBarLayout btnbarlayout;
+    FirebaseStorage storage;
+    LinearLayout addimagebtn;
+    TextView addimagestring;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Instamojo.initialize(this);
-        Instamojo.setBaseUrl("https://api.instamojo.com/");
+        storage = FirebaseStorage.getInstance();
         setContentView(R.layout.activity_my_cart);
-        cart_progress = (ProgressBar) findViewById(R.id.cart_progress);
+        btnbarlayout = (ButtonBarLayout) findViewById(R.id.cart_bottom_bar);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        cart_progress = (SpinKitView) findViewById(R.id.cart_progress);
         nestedview = (NestedScrollView) findViewById(R.id.categoryscroll_view);
-        dialog = new ProgressDialog(this);
+        coupontext = (TextView) findViewById(R.id.coupontext);
+        addimagestring = (TextView) findViewById(R.id.addImagestring);
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+        final FloatingActionButton actionB = (FloatingActionButton) findViewById(R.id.action_b);
+        final LinearLayout specialnotebtn = (LinearLayout) findViewById(R.id.specialNotebtnlayout);
+        addimagebtn = (LinearLayout) findViewById(R.id.addImagebtnlayout);
+        addimagebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ctx, AlbumSelectActivity.class);
+                intent.putExtra(com.darsh.multipleimageselect.helpers.Constants.INTENT_EXTRA_LIMIT, 20);
+                startActivityForResult(intent, com.darsh.multipleimageselect.helpers.Constants.REQUEST_CODE);
+            }
+        });
+        specialnotebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup vg = (ViewGroup) getLayoutInflater().inflate(R.layout.viewgroup, null);
+                final View specialnoteview = getLayoutInflater().inflate(R.layout.special_note, vg);
+                final LovelyCustomDialog mDialog = new LovelyCustomDialog(ctx);
+                mDialog.setView(specialnoteview)
+                        .setTopColorRes(R.color.colorPrimaryDark)
+                        .setTopTitle("Special Note")
+                        .setTopTitleColor(ContextCompat.getColor(ctx, R.color.colorWhite))
+                        .setCancelable(true)
+                        .setListener(R.id.couponCodeBtn, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EditText couponcode = (EditText) specialnoteview.findViewById(R.id.couponCode);
+                                if (!TextUtils.isEmpty(couponcode.getText())) {
+                                    specialnote = couponcode.getText().toString();
+                                    TextView specialnotestring = (TextView) findViewById(R.id.specialnotestring);
+                                    specialnotestring.setText(specialnote);
+                                    specialnotebtn.setBackground(ContextCompat.getDrawable(ctx, R.drawable.cart_updated_border_bg));
+
+                                } else {
+                                    Toast.makeText(ctx, "Special Note can't be empty", Toast.LENGTH_SHORT).show();
+                                }
+                                mDialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
+
+        dialog = new ProgressDialog(ctx);
         dialog.setIndeterminate(true);
         mAuth = FirebaseAuth.getInstance();
+
+
+        actionA.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAuth.getCurrentUser() != null) {
+                    Intent addressUpdate = new Intent(ctx, DeliveryActivity.class);
+                    addressUpdate.putExtra("from", "cart");
+                    startActivity(addressUpdate);
+                    finish();
+                } else {
+                    Toast.makeText(ctx, "Please Login to set Delivery Address", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        actionB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mAuth.getCurrentUser() != null) {
+                    Intent addressUpdate = new Intent(ctx, Feedback.class);
+                    startActivity(addressUpdate);
+                    finish();
+                } else {
+                    Toast.makeText(ctx, "Please Login to send Feedback", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        Button actioncoupon = (Button) findViewById(R.id.action_coupon);
+        actioncoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ViewGroup vg = (ViewGroup) getLayoutInflater().inflate(R.layout.viewgroup, null);
+                final View cakeOptions = getLayoutInflater().inflate(R.layout.coupon, vg);
+                final LovelyCustomDialog mDialog = new LovelyCustomDialog(ctx);
+                mDialog.setView(cakeOptions)
+                        .setTopColorRes(R.color.colorPrimaryDark)
+                        .setTopTitle("Apply Coupon ")
+                        .setTopTitleColor(ContextCompat.getColor(ctx, R.color.colorWhite))
+                        .setCancelable(true)
+                        .setListener(R.id.couponCodeBtn, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                EditText couponcode = (EditText) cakeOptions.findViewById(R.id.couponCode);
+                                if (!TextUtils.isEmpty(couponcode.getText())) {
+                                    ValidateCoupon(couponcode.getText().toString());
+                                } else {
+                                    Toast.makeText(ctx, "Enter Valid Coupon Code", Toast.LENGTH_SHORT).show();
+                                }
+                                mDialog.dismiss();
+                            }
+                        })
+                        .show();
+            }
+        });
         dialog.setMessage("Please Wait...");
         dialog.setCancelable(false);
-        Instamojo.setLogLevel(Log.ERROR);
-
         btn_checkout = (Button) findViewById(R.id.btn_payment);
         setupToolbar();
         if (mAuth.getCurrentUser() != null) {
@@ -105,31 +242,47 @@ public class MyCart extends AppCompatActivity {
 
         }
         totalview = (TextView) findViewById(R.id.cart_total);
-        totalview.setText("Rs " + String.valueOf(total) + "/-");
+        totalview.setText("\u20B9" + String.valueOf(total) + "/-");
         root = null;
 
         rc_view = (RecyclerView) findViewById(R.id.rc_cart);
         if (mAuth.getCurrentUser() != null) {
             root = FirebaseDatabase.getInstance().getReference("cart").child(mAuth.getCurrentUser().getUid());
-            Query myquery = root.orderByKey();
+            myquery = root.orderByKey();
             fetchPhone(mAuth.getCurrentUser().getUid());
 
             setupAdapter(myquery);
-            cart_progress.setVisibility(View.GONE);
-            nestedview.setVisibility(View.VISIBLE);
         } else {
             setContentView(R.layout.not_signed_in);
 
         }
-        LinearLayoutManager linear = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
+        linear = new LinearLayoutManager(ctx, LinearLayoutManager.VERTICAL, false);
         rc_view.setLayoutManager(linear);
         btn_checkout.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 if (mAuth.getCurrentUser() != null) {
-                                                    dialog.show();
-                                                    deliveryAddressAvailable();
-
+                                                    if (REQUIRE_IMAGES == 0 || (REQUIRE_IMAGES > 0 && HAS_IMAGES == 1)) {
+                                                        new BottomSheet.Builder(MyCart.this).title("Choose Payment Method").sheet(R.menu.checkout_menu).listener(new DialogInterface.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(DialogInterface dialog1, int which) {
+                                                                switch (which) {
+                                                                    case R.id.cod:
+                                                                        cashOnDelivery();
+                                                                        break;
+                                                                    case R.id.online:
+                                                                        dialog.show();
+                                                                        deliveryAddressAvailable();
+                                                                        break;
+                                                                }
+                                                            }
+                                                        }).show();
+                                                    } else {
+                                                        Toast.makeText(ctx, "Upload images to complete your order.", Toast.LENGTH_SHORT).show();
+                                                        addimagebtn.setBackground(ContextCompat.getDrawable(ctx, R.color.colorPrimary));
+                                                        addimagestring.setTextColor(ContextCompat.getColor(ctx, R.color.colorWhite));
+                                                        ViewAnimator.animate(addimagestring).flash().duration(200).start();
+                                                    }
                                                 }
                                             }
                                         }
@@ -159,8 +312,7 @@ public class MyCart extends AppCompatActivity {
 
     public void setupAdapter(final Query myquery) {
         if (mAuth.getCurrentUser() != null) {
-
-            myquery.addValueEventListener(new ValueEventListener() {
+            myQueryListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (dataSnapshot.hasChildren()) {
@@ -176,16 +328,24 @@ public class MyCart extends AppCompatActivity {
                                 final String post_key = getRef(position).getKey();
                                 final String user_id = mAuth.getCurrentUser().getUid();
                                 try {
-                                    mPurpose += model.getName() + " ";
+                                    mPurpose += model.getName() + "";
+                                    if (model.getImage_required() == 1) {
+                                        REQUIRE_IMAGES++;
+                                    }
                                     viewHolder.setName(model.getName());
                                     viewHolder.setPrice(model.getTotal());
+                                    viewHolder.setDeliveryPrice(model.getTime_charge());
+                                    viewHolder.setProductBasePrice(model.getPrice());
+                                    viewHolder.setEgglessPrice(model.getType_charge());
                                     viewHolder.setProductType(model.getProducttype());
                                     viewHolder.setProductRemove(user_id, post_key);
-                                    viewHolder.setImage(MyCart.this, model.getImageurl());
+                                    viewHolder.swipeRemove(user_id, post_key);
+                                    viewHolder.setImage(ctx, model.getImageurl());
 
                                     viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            viewHolder.startProductActivity(ctx, post_key);
 
                                         }
                                     });
@@ -212,18 +372,31 @@ public class MyCart extends AppCompatActivity {
                         }
 
                     }
+                    cart_progress.setVisibility(View.GONE);
+                    nestedview.setVisibility(View.VISIBLE);
+                    ViewAnimator.animate(btnbarlayout).translationY(0).duration(200).start();
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
-            myquery.addChildEventListener(new ChildEventListener() {
+            };
+            myquery.addValueEventListener(myQueryListener);
+            myQueryListener2 = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                    total = total + Long.parseLong(dataSnapshot.child("total").getValue().toString());
-                    totalview.setText("Rs " + String.valueOf(total) + "/-");
+                    if (dataSnapshot.hasChild("total")) {
+                        total = total + Long.parseLong(dataSnapshot.child("total").getValue().toString());
+                        realtotal = realtotal + Long.parseLong(dataSnapshot.child("total").getValue().toString());
+                        totalview.setText("\u20B9" + String.valueOf(total));
+                        if (COUPON_APPLIED == 1) {
+                            long discount = (percent * realtotal) / 100;
+                            total = realtotal - discount;
+                            totalview.setText("\u20B9" + String.valueOf(total));
+                            coupontext.setText("Coupon Code :" + String.valueOf(couponCodeString) + " Applied. Real Price \u20B9:" + String.valueOf(realtotal));
+                        }
+                    }
                 }
 
                 @Override
@@ -233,8 +406,30 @@ public class MyCart extends AppCompatActivity {
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
-                    total = total - Long.parseLong(dataSnapshot.child("total").getValue().toString());
-                    totalview.setText("Rs " + String.valueOf(total) + "/-");
+                    COUPON_APPLIED = 1;
+                    if (dataSnapshot.hasChild("image_required")) {
+                        REQUIRE_IMAGES--;
+                    }
+                    if (dataSnapshot.hasChild("total")) {
+                        total = total - Long.parseLong(dataSnapshot.child("total").getValue().toString());
+                        realtotal = realtotal - Long.parseLong(dataSnapshot.child("total").getValue().toString());
+                        totalview.setText("\u20B9" + String.valueOf(total));
+                        if (COUPON_APPLIED == 1) {
+                            if (couponType == 1) {
+                                long discount = (percent * realtotal) / 100;
+                                total = realtotal - discount;
+                                totalview.setText("\u20B9" + String.valueOf(total));
+                                TextView coupontext = (TextView) findViewById(R.id.coupontext);
+                                coupontext.setText("Coupon Code :" + String.valueOf(couponCodeString) + " Applied. Real Price :" + String.valueOf(realtotal));
+                            } else if (couponType == 2) {
+                                total = realtotal - percent;
+                                totalview.setText("\u20B9" + String.valueOf(total));
+                                Toast.makeText(ctx, "Coupon Applied", Toast.LENGTH_SHORT).show();
+                                TextView coupontext = (TextView) findViewById(R.id.coupontext);
+                                coupontext.setText("Coupon Code :" + String.valueOf(couponCodeString) + " Applied. Real Price :" + String.valueOf(realtotal));
+                            }
+                        }
+                    }
                 }
 
                 @Override
@@ -246,9 +441,11 @@ public class MyCart extends AppCompatActivity {
                 public void onCancelled(DatabaseError databaseError) {
 
                 }
-            });
+
+            };
+            myquery.addChildEventListener(myQueryListener2);
         } else {
-            Log.e("I am ", "Not Logged In");
+            Toast.makeText(ctx, "Please Login", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -273,6 +470,22 @@ public class MyCart extends AppCompatActivity {
     public void fetchPhone(String uid) {
 
         if (uid != null) {
+            DatabaseReference address = FirebaseDatabase.getInstance().getReference("deliveryaddress").child(mAuth.getCurrentUser().getUid());
+            address.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()
+                            ) {
+                        dAddress += " " + child.getValue().toString();
+                    }
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
             DatabaseReference myref = FirebaseDatabase.getInstance().getReference("deliveryaddress").child(uid);
             myref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -296,7 +509,7 @@ public class MyCart extends AppCompatActivity {
         if (dialog != null && !dialog.isShowing()) {
             dialog.show();
         }
-        Map transaction = new HashMap();
+        final Map transaction = new HashMap();
         transaction.put("username", username);
         transaction.put("email", useremail);
         transaction.put("phone", phone);
@@ -304,7 +517,7 @@ public class MyCart extends AppCompatActivity {
         transaction.put("amount", Amount);
         transaction.put("status", "Initiated");
         transaction.put("transactionid", transactionID);
-
+        transaction.put("deliveryaddress", dAddress);
         DatabaseReference myref = FirebaseDatabase.getInstance().getReference("transactions");
         myref.child(mAuth.getCurrentUser().getUid()).child(transactionID).updateChildren(transaction);
     }
@@ -325,8 +538,6 @@ public class MyCart extends AppCompatActivity {
         transaction.put("date", date);
         time = date;
         postpaymentid = paymentid;
-
-
         DatabaseReference myref = FirebaseDatabase.getInstance().getReference("transactions");
         myref.child(mAuth.getCurrentUser().getUid()).child(transactionID).updateChildren(transaction);
     }
@@ -446,7 +657,7 @@ public class MyCart extends AppCompatActivity {
                                 }
 
                                 if (!validationError.isValidAmount()) {
-                                    Log.e("order", "Amount is either less than Rs.9 or has more than two decimal places");
+                                    Log.e("order", "Amount is either less than \u20B99 or has more than two decimal places");
                                     return;
                                 }
 
@@ -567,6 +778,52 @@ public class MyCart extends AppCompatActivity {
 
             }
         }
+
+        if (requestCode == com.darsh.multipleimageselect.helpers.Constants.REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            final ProgressDialog loadimageProgress = new ProgressDialog(ctx);
+            loadimageProgress.setMessage("Uploading Images");
+            loadimageProgress.setTitle("Please Wait");
+            loadimageProgress.show();
+
+            //The array list has the image paths of the selected images
+            ArrayList<Image> images = data.getParcelableArrayListExtra(com.darsh.multipleimageselect.helpers.Constants.INTENT_EXTRA_IMAGES);
+            StorageReference storageRef = storage.getReference();
+            final DatabaseReference orderimages = FirebaseDatabase.getInstance().getReference("order_images").child(transactionID);
+            for (Image child : images) {
+                loadimageProgress.setMessage("Uploading " + images.size() + " Image");
+                Uri file = Uri.fromFile(new File(child.path));
+                StorageReference riversRef = storageRef.child("orders/" + transactionID + "/" + randomString(5) + file.getLastPathSegment());
+                UploadTask uploadTask = riversRef.putFile(file);
+                Bundle bundle = new Bundle();
+                bundle.putLong(FirebaseAnalytics.Param.VALUE, total);
+                bundle.putLong(FirebaseAnalytics.Param.TAX, 0);
+                bundle.putString(FirebaseAnalytics.Param.COUPON, String.valueOf(couponCodeString));
+                bundle.putString(FirebaseAnalytics.Param.TRANSACTION_ID, transactionID);
+                bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+// Register observers to listen for when the download is done or if it fails
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        Toast.makeText(ctx, "Failed to Load Image ", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        orderimages.push().setValue(downloadUrl.toString());
+                        loadimageProgress.dismiss();
+                    }
+                });
+            }
+            addimagestring.setText(images.size() + " Images Uploaded");
+            addimagestring.setTextColor(ContextCompat.getColor(ctx, R.color.colorDarkBlack));
+            addimagebtn.setBackground(ContextCompat.getDrawable(ctx, R.drawable.cart_updated_border_bg));
+            HAS_IMAGES = 1;
+
+        }
     }
 
     private void checkPaymentStatus(final String transactionID, final String orderID) {
@@ -617,8 +874,9 @@ public class MyCart extends AppCompatActivity {
                     String order_id = FirebaseDatabase.getInstance().getReference("orders").child(mAuth.getCurrentUser().getUid()).push().getKey();
                     DatabaseReference topath = FirebaseDatabase.getInstance().getReference("orders").child(mAuth.getCurrentUser().getUid()).child(order_id);
                     try {
+                        NotifyChef(mPhone, 2, total, username, orderID);
                         moveFirebaseRecord(frompath, topath);
-                        Intent success = new Intent(MyCart.this, CheckoutAcitivity.class);
+                        Intent success = new Intent(ctx, CheckoutAcitivity.class);
                         success.putExtra("success", "yes");
                         success.putExtra("trans_id", amount);
                         startActivity(success);
@@ -681,20 +939,72 @@ public class MyCart extends AppCompatActivity {
                         if (mPurpose.length() > 30) {
                             ordername = mPurpose.substring(0, 29);
                         }
-                        Map data = new HashMap();
+                        final Map data = new HashMap();
                         data.put("paymentid", postpaymentid);
-                        data.put("date", time);
                         data.put("total", total);
                         data.put("uid", mAuth.getCurrentUser().getUid());
-                        data.put("paymentstatus", postPaymentStatus);
+                        if (cod == 1) {
+                            SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                            Date rightnow = new Date();
+                            String date = df.format(rightnow);
+                            data.put("date", date);
+                            data.put("paymentstatus", "Cash On Delivery");
+                            data.put("paymentmethod", "COD");
+                        } else {
+                            data.put("date", time);
+                            data.put("paymentstatus", postPaymentStatus);
+                            data.put("paymentmethod", "Online");
+                        }
+                        if (HAS_IMAGES == 1) {
+                            data.put("order_images", transactionID);
+                        } else {
+                            data.put("order_images", "No Images");
+                        }
                         data.put("order_status", "Pending");
+                        if (!specialnote.isEmpty()) {
+                            data.put("special_note", specialnote);
+                        }
+                        if (COUPON_APPLIED == 1) {
+                            data.put("coupon_code", couponCodeString);
+                            data.put("gross_total", realtotal);
+                        }
                         data.put("ordername", ordername);
+                        data.put("deliveryaddress", dAddress);
                         toPath.updateChildren(data);
                         toPath.updateChildren(data, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                                 Log.v("Completed", "yes");
                                 fromPath.removeValue();
+                                if (COUPON_APPLIED == 1) {
+                                    final DatabaseReference removeCode = FirebaseDatabase.getInstance().getReference("coupons");
+                                    try {
+                                        removeCode.child(couponCodeString).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                Map values = new HashMap();
+                                                long currentvalue;
+                                                if (dataSnapshot.hasChild("qty")) {
+                                                    if (Integer.valueOf(String.valueOf(dataSnapshot.child("qty").getValue())) > 0) {
+                                                        currentvalue = (long) dataSnapshot.child("qty").getValue();
+                                                        currentvalue--;
+                                                        values.put("qty", currentvalue);
+                                                        removeCode.child(couponCodeString).updateChildren(values);
+                                                    }
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+                                    } catch (DatabaseException e) {
+                                        FirebaseCrash.log(e.getMessage());
+                                    }
+
+                                }
                             }
                         });
 
@@ -725,16 +1035,19 @@ public class MyCart extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.hasChild(mAuth.getCurrentUser().getUid())) {
+                    Instamojo.initialize(ctx);
+                    Instamojo.setBaseUrl("https://api.instamojo.com/");
                     generateTransactionID(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail(), mPhone, mPurpose, total);
                     requestToken();
                 } else {
                     if (dialog != null && dialog.isShowing()) {
                         dialog.dismiss();
                     }
-                    ToastOX.warning(MyCart.this, "Specify Delivery Address First!");
-                    Intent addressUpdate = new Intent(MyCart.this, DeliveryActivity.class);
+                    ToastOX.warning(ctx, "Specify Delivery Address First!");
+                    Intent addressUpdate = new Intent(ctx, DeliveryActivity.class);
                     addressUpdate.putExtra("from", "cart");
                     startActivity(addressUpdate);
+                    finish();
                 }
             }
 
@@ -745,8 +1058,178 @@ public class MyCart extends AppCompatActivity {
         });
     }
 
-    public void updateMyEmail() {
+    public void ValidateCoupon(String Coupon) {
+        final String couponCode = Coupon.toUpperCase();
+        DatabaseReference couponref = FirebaseDatabase.getInstance().getReference("coupons");
+        if (mAuth.getCurrentUser() != null) {
+            couponref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                         @Override
+                                                         public void onDataChange(DataSnapshot dataSnapshot) {
+                                                             if (dataSnapshot.hasChild(couponCode)) {
+                                                                 ProgressDialog maDialog = new ProgressDialog(ctx);
+                                                                 maDialog.setMessage("Validating Coupon..");
+                                                                 maDialog.setCancelable(false);
+                                                                 maDialog.show();
+                                                                 DataSnapshot child = dataSnapshot.child(couponCode);
+                                                                 if (child.hasChildren()) {
+                                                                     try {
+                                                                         if (Integer.valueOf(String.valueOf(child.child("qty").getValue())) > 0) {
+                                                                             if (total > Long.valueOf(String.valueOf(child.child("min").getValue()))) {
+                                                                                 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                                                                                 Date date1 = sdf.parse(String.valueOf(child.child("validity").getValue()));
+                                                                                 Date date2 = new Date();
+                                                                                 if (date1.compareTo(date2) >= 0) {
+                                                                                     if (Integer.valueOf(String.valueOf(child.child("type").getValue())) == 1) {
+                                                                                         couponType = 1;
+                                                                                         long discount = (Long.valueOf(String.valueOf(child.child("amount").getValue())) * realtotal) / 100;
+                                                                                         percent = Long.valueOf(String.valueOf(child.child("amount").getValue()));
+                                                                                         couponCodeString = couponCode;
+                                                                                         total = realtotal - discount;
+                                                                                         totalview.setText("\u20B9" + String.valueOf(total));
+                                                                                         Toast.makeText(ctx, "Coupon Applied", Toast.LENGTH_SHORT).show();
+                                                                                         TextView coupontext = (TextView) findViewById(R.id.coupontext);
+                                                                                         coupontext.setText("Coupon Code :" + String.valueOf(couponCode) + " Applied. Real Price :" + String.valueOf(realtotal));
+                                                                                         COUPON_APPLIED = 1;
+                                                                                     } else if (Integer.valueOf(String.valueOf(child.child("type").getValue())) == 2) {
+                                                                                         couponType = 2;
+                                                                                         percent = Long.valueOf(String.valueOf(child.child("amount").getValue()));
+                                                                                         couponCodeString = couponCode;
+                                                                                         total = realtotal - percent;
+                                                                                         totalview.setText("\u20B9" + String.valueOf(total));
+                                                                                         Toast.makeText(ctx, "Coupon Applied", Toast.LENGTH_SHORT).show();
+                                                                                         TextView coupontext = (TextView) findViewById(R.id.coupontext);
+                                                                                         coupontext.setText("Coupon Code :" + String.valueOf(couponCode) + " Applied. Real Price :" + String.valueOf(realtotal));
+                                                                                         COUPON_APPLIED = 1;
+                                                                                     }
+                                                                                 } else {
+                                                                                     Toast.makeText(ctx, "Expired", Toast.LENGTH_SHORT).show();
+
+                                                                                 }
+
+                                                                             } else {
+                                                                                 Toast.makeText(ctx, "Min Purchase of \u20B9" + String.valueOf(child.child("min").getValue()) + " is required", Toast.LENGTH_SHORT).show();
+
+                                                                             }
+                                                                         } else {
+                                                                             Toast.makeText(ctx, "Coupon Limit Reached", Toast.LENGTH_SHORT).show();
+                                                                         }
+                                                                     } catch (Exception e) {
+                                                                         FirebaseCrash.log(e.getMessage());
+                                                                     }
+                                                                 }
+
+
+                                                                 maDialog.dismiss();
+                                                             } else {
+                                                                 Toast.makeText(ctx, "Invalid Coupon", Toast.LENGTH_SHORT).show();
+                                                             }
+
+                                                         }
+
+                                                         @Override
+                                                         public void onCancelled(DatabaseError databaseError) {
+
+                                                         }
+                                                     }
+
+            );
+        } else {
+            Toast.makeText(ctx, "Login to Apply Coupon", Toast.LENGTH_SHORT).show();
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rc_view.removeAllViewsInLayout();
+        ImageLoader.getInstance().clearMemoryCache();
+        myquery.removeEventListener(myQueryListener);
+        myquery.removeEventListener(myQueryListener2);
+        linear = null;
+        dialog = null;
+        ctx = null;
+
+
+    }
+
+    public void cashOnDelivery() {
+        cod = 1;
+
+        DatabaseReference deliveryadd = FirebaseDatabase.getInstance().getReference("deliveryaddress");
+        deliveryadd.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(mAuth.getCurrentUser().getUid())) {
+                    fetchPhone(mAuth.getCurrentUser().getUid());
+                    if (!mPhone.equals(" ")) {
+                        generateTransactionID(mAuth.getCurrentUser().getDisplayName(), mAuth.getCurrentUser().getEmail(), mPhone, mPurpose, total);
+                        DatabaseReference frompath = FirebaseDatabase.getInstance().getReference("cart").child(mAuth.getCurrentUser().getUid());
+                        String order_id = FirebaseDatabase.getInstance().getReference("orders").child(mAuth.getCurrentUser().getUid()).push().getKey();
+                        DatabaseReference topath = FirebaseDatabase.getInstance().getReference("orders").child(mAuth.getCurrentUser().getUid()).child(order_id);
+                        moveFirebaseRecord(frompath, topath);
+                        NotifyChef(mPhone, 1, total, username, order_id);
+                        Bundle bundle = new Bundle();
+                        bundle.putLong(FirebaseAnalytics.Param.VALUE, total);
+                        bundle.putLong(FirebaseAnalytics.Param.TAX, 0);
+                        bundle.putString(FirebaseAnalytics.Param.COUPON, String.valueOf(couponCodeString));
+                        bundle.putString(FirebaseAnalytics.Param.TRANSACTION_ID, transactionID);
+                        bundle.putString(FirebaseAnalytics.Param.CURRENCY, "INR");
+                        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ECOMMERCE_PURCHASE, bundle);
+                        Intent success = new Intent(ctx, CheckoutAcitivity.class);
+                        success.putExtra("success", "yes");
+                        success.putExtra("trans_id", total);
+                        startActivity(success);
+                        finish();
+                    } else {
+                        Toast.makeText(ctx, "Enter Valid Mobile Number for COD", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (dialog != null && dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    ToastOX.warning(ctx, "Specify Delivery Address First!");
+                    Intent addressUpdate = new Intent(ctx, DeliveryActivity.class);
+                    addressUpdate.putExtra("from", "cart");
+                    startActivity(addressUpdate);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void NotifyChef(String Phone, int msg, long total, String username, String order_id) {
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url("http://partybear.in/api/notify/request.php?mobile=" + Phone + "&msg=" + msg + "&total=" + total + "&name=" + username + "&orderid=" + order_id)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseString = response.body().string();
+            }
+        });
+    }
+
+
 }
+
+
 

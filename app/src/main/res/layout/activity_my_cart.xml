@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -19,21 +20,23 @@
             android:layout_width="match_parent"
             android:layout_height="?android:actionBarSize"
             android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+            app:layout_scrollFlags="scroll|enterAlways" />
     </android.support.design.widget.AppBarLayout>
 
-    <ProgressBar
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cart_progress"
+        style="@style/SpinKitView.FoldingCube"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="visible" />
+        app:SpinKit_Color="@color/colorPrimary" />
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/categoryscroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="fill_vertical"
+        android:background="@color/colorGreyLight"
         android:visibility="gone"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -42,15 +45,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rc_cart"
+            <TextView
+                android:id="@+id/coupontext"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_10"
+                android:layout_marginBottom="@dimen/padding_10"
+                android:background="@drawable/couponbackground"
+                android:gravity="center"
+                android:padding="@dimen/padding_10"
+                android:text="No Coupon Applied"
+                android:textAlignment="center"
+                android:textColor="@color/colorDarkBlack"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="100dp"
+                android:layout_gravity="end"
+                android:layout_margin="@dimen/padding_5"
                 android:orientation="horizontal">
 
                 <TextView
@@ -59,7 +72,8 @@
                     android:layout_margin="@dimen/padding_5"
                     android:layout_weight="1"
                     android:gravity="end"
-                    android:text="Total :"
+                    android:text="TOTAL"
+                    android:textColor="@color/colorDarkBlack"
                     android:textSize="12sp" />
 
                 <TextView
@@ -69,18 +83,154 @@
                     android:layout_margin="@dimen/padding_5"
                     android:layout_weight="1"
                     android:text="Rs 1000/-"
+                    android:textColor="@color/colorDarkBlack"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rc_cart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="40dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_security_white_24dp"
+                    android:tint="@color/colorGrey" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_5"
+                    android:layout_weight="1"
+                    android:text="100% Secure and Safe Payment"
+                    android:textColor="@color/colorGrey"
                     android:textSize="12sp" />
             </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="200dp">
+            <LinearLayout
+                android:id="@+id/specialNotebtnlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5"
+                android:background="@drawable/primary_border_bg"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_10">
+
+                <TextView
+                    android:id="@+id/specialnotestring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".9"
+                    android:text="Add Special Note"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight=".1"
+                    android:src="@drawable/ic_note_add_black_24dp"
+                    android:tint="@color/colorGrey" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/addImagebtnlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/padding_5"
+                android:background="@drawable/primary_border_bg"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_10">
+
+                <TextView
+                    android:id="@+id/addImagestring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".9"
+                    android:text="Upload Image"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:id="@+id/addImageview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_weight=".1"
+                    android:src="@drawable/ic_camera_alt_black_24dp"
+                    android:tint="@color/colorGrey" />
+            </LinearLayout>
+    </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
-    <Button
-        android:id="@+id/btn_payment"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="58dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_addButtonColorNormal="@color/colorPrimary"
+        fab:fab_addButtonColorPressed="@color/colorPrimary"
+        fab:fab_addButtonPlusIconColor="@color/colorWhite"
+        fab:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_local_shipping_white_24dp"
+            fab:fab_title="Update Delivery Address" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/colorPrimary"
+            fab:fab_colorPressed="@color/colorPrimaryDark"
+            fab:fab_icon="@drawable/ic_message_white_24dp"
+            fab:fab_title="Request/Report" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:id="@+id/cart_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="?android:actionBarSize"
+        android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
-        android:background="@color/colorDarkBlack"
-        android:padding="@dimen/padding_5"
-        android:text="CHECKOUT"
-        android:textColor="@color/colorWhite" />
+        android:translationY="60dp">
+
+        <Button
+            android:id="@+id/action_coupon"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorDarkBlack"
+            android:text="Apply Coupon"
+            android:textColor="@color/colorWhite" />
+
+        <Button
+            android:id="@+id/btn_payment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:text="Pay Now"
+            android:textColor="@color/colorWhite" />
+    </android.support.v7.widget.ButtonBarLayout>
 </android.support.design.widget.CoordinatorLayout>

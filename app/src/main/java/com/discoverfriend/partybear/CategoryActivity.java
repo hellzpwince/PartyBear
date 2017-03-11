@@ -1,9 +1,11 @@
 package com.discoverfriend.partybear;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -11,12 +13,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.discoverfriend.partybear.category.FragmentAdapter;
+import com.discoverfriend.partybear.order_processing.OrderLayoutActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
-
 public class CategoryActivity extends AppCompatActivity {
     Bundle bundle;
     /*initialize objects here*/
@@ -104,16 +108,52 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mFragmentAdapter = null;
+        mAuth = null;
+        mViewpager.removeAllViewsInLayout();
+        ImageLoader.getInstance().clearMemoryCache();
+        bundle.clear();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_shopping_cart) {
             if (mAuth.getCurrentUser() != null) {
                 startActivity(new Intent(CategoryActivity.this, MyCart.class));
             } else {
-                Snackbar.make(getCurrentFocus(), "Login to access your Cart!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getCurrentFocus(), "Log In to access your Cart!", Snackbar.LENGTH_SHORT).setAction("Login", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(CategoryActivity.this, LoginActivity.class));
+                    }
+                }).setActionTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary)).show();
+            }
+        }
+        if (id == R.id.action_top_wishlist) {
+            if (mAuth.getCurrentUser() != null) {
+                Intent wishlist = new Intent(CategoryActivity.this, OrderLayoutActivity.class);
+                wishlist.putExtra("position", 1);
+                startActivity(wishlist);
+            } else {
+                Snackbar.make(getCurrentFocus(), "Log In to access your Wishlist!", Snackbar.LENGTH_SHORT).setAction("Login", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(CategoryActivity.this, LoginActivity.class));
+                    }
+                }).setActionTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary)).show();
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        ImageLoader.getInstance().clearMemoryCache();
+        finish();
     }
 
 }

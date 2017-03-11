@@ -1,5 +1,6 @@
 package com.discoverfriend.partybear;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,7 +27,6 @@ import com.onurciner.toastox.ToastOX;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 public class DeliveryActivity extends AppCompatActivity {
     Toolbar toolbar;
     EditText name;
@@ -33,6 +34,7 @@ public class DeliveryActivity extends AppCompatActivity {
     EditText address2;
     EditText area;
     EditText pincode;
+    Context ctx = this;
     EditText email;
     EditText mobile;
     FirebaseAuth mAuth;
@@ -40,6 +42,7 @@ public class DeliveryActivity extends AppCompatActivity {
     Button btn_delivery;
     String from = "";
     Spinner cityspinner;
+    FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class DeliveryActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         btn_delivery = (Button) findViewById(R.id.btn_delivery);
         if (mAuth.getCurrentUser() == null) {
-            ToastOX.error(getApplicationContext(), "Login to set Delivery Address", Toast.LENGTH_SHORT);
+            ToastOX.error(ctx, "Login to set Delivery Address", Toast.LENGTH_SHORT);
             getParentActivityIntent();
             finish();
         } else {
@@ -109,7 +112,7 @@ public class DeliveryActivity extends AppCompatActivity {
                             }
                         }
                     } catch (Exception e) {
-                        ToastOX.error(getApplicationContext(), "Opps! An Error Occurred. Please Try Again");
+                        ToastOX.error(ctx, "Opps! An Error Occurred. Please Try Again");
                     }
                 }
 
@@ -140,7 +143,6 @@ public class DeliveryActivity extends AppCompatActivity {
                                                                         if (!TextUtils.isEmpty(pincode.getText().toString())) {
                                                                             if (mobile.getText().length() > 9) {
                                                                                 try {
-
                                                                                     address.put("name", name.getText().toString());
                                                                                     address.put("mobile", mobile.getText().toString());
                                                                                     address.put("email", email.getText().toString());
@@ -150,14 +152,16 @@ public class DeliveryActivity extends AppCompatActivity {
                                                                                     address.put("pincode", pincode.getText().toString());
                                                                                     deliveryref = FirebaseDatabase.getInstance().getReference("deliveryaddress").child(mAuth.getCurrentUser().getUid());
                                                                                     deliveryref.updateChildren(address);
+                                                                                    Bundle bundle = new Bundle();
+                                                                                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.ADD_PAYMENT_INFO, bundle);
                                                                                     if (!from.isEmpty()) {
                                                                                         if (from.equals("cart")) {
-                                                                                            ToastOX.info(DeliveryActivity.this, "Delivery Address Updated");
-                                                                                            startActivity(new Intent(DeliveryActivity.this, MyCart.class));
+                                                                                            ToastOX.info(ctx, "Delivery Address Updated");
+                                                                                            startActivity(new Intent(ctx, MyCart.class));
                                                                                             finish();
                                                                                         }
                                                                                     } else {
-                                                                                        ToastOX.info(getApplicationContext(), "Delivery Address Updated");
+                                                                                        ToastOX.info(ctx, "Delivery Address Updated");
                                                                                         getParentActivityIntent();
                                                                                         finish();
                                                                                     }
@@ -169,8 +173,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                                                     Log.e("Delivery Log", e.getMessage());
                                                                                     Snackbar.make(getCurrentFocus(), "Failed to Update Address.Please Try Again", Snackbar.LENGTH_SHORT).show();
                                                                                 }
-                                                                            }
-                                                                            else{
+                                                                            } else {
                                                                                 mobile.setError("Enter Valid Mobile Number");
                                                                             }
                                                                         } else {
@@ -200,4 +203,11 @@ public class DeliveryActivity extends AppCompatActivity {
 
         );
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ctx = null;
+    }
+
 }

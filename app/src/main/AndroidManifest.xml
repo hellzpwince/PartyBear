@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
+        android:name=".ExtendedApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -51,7 +52,28 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="tscb5.app.goo.gl" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="tscb5.app.goo.gl" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".CategoryActivity"
             android:parentActivityName=".MainActivity"
@@ -124,9 +146,27 @@
             android:theme="@style/AppTheme.TransNav" />
         <activity
             android:name=".Feedback"
+            android:label="Feedback"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.TransNav"
-            android:label="Feedback"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransNav" />
+        <activity
+            android:name=".SearchActivity"
+            android:label="Search"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransNav" />
+        <activity
+            android:name=".ProductTypeActivity"
+            android:label="Product List"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransNav" />
+        <activity
+            android:name=".addons.Addons"
+            android:parentActivityName=".MyCart"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.TransNav" />
     </application>
 
 </manifest>

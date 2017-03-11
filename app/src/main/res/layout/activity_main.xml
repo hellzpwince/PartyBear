@@ -16,24 +16,52 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/my_appbar_container"
             android:layout_width="match_parent"
-            android:layout_height="?android:actionBarSize"
+            android:layout_height="110dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="?android:actionBarSize"
-                android:background="@color/colorPrimary"
-                android:paddingRight="@dimen/padding_08"
-                app:layout_scrollFlags="scroll|enterAlways" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/padding_5"
+                android:fitsSystemWindows="true"
+                app:contentScrim="?attr/colorPrimary"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:titleEnabled="false">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    fontPath="fonts/Lato-Light.ttf"
+                    android:layout_height="?android:actionBarSize"
+                    android:background="@color/colorPrimary"
+                    android:paddingRight="@dimen/padding_08"
+                    app:layout_scrollFlags="scroll|enterAlways" />
+
+                <com.arlib.floatingsearchview.FloatingSearchView
+                    android:id="@+id/floating_search_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:floatingSearch_close_search_on_keyboard_dismiss="true"
+                    app:floatingSearch_leftActionMode="showSearch"
+                    app:floatingSearch_searchBarMarginLeft="5dp"
+                    app:floatingSearch_searchBarMarginRight="5dp"
+                    app:floatingSearch_searchBarMarginTop="50dp"
+                    app:floatingSearch_searchHint="Search Products"
+                    app:floatingSearch_showSearchKey="true"
+                    app:floatingSearch_suggestionsListAnimDuration="250"
+                    app:layout_collapseMode="none"
+                    app:layout_scrollFlags="scroll|enterAlways" />
+            </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
-        <ProgressBar
-            android:id="@+id/homepage_progressbar"
+        <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/mainpage_spin_kit"
+            style="@style/SpinKitView.FoldingCube"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="visible" />
+            app:SpinKit_Color="@color/colorPrimary" />
 
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/scroll_view"
@@ -46,7 +74,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorGreyLight"
                 android:orientation="vertical"
                 custom:ignore="ScrollViewSize">
 
@@ -57,13 +84,99 @@
                     android:layout_margin="@dimen/padding_5" />
 
                 <RelativeLayout
+                    android:id="@+id/deal_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
+
+                    <LinearLayout
+                        android:id="@+id/linearlayoutDeal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_5"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/padding_5">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_whatshot_white_24dp"
+                            android:tint="@color/colorPrimary" />
+
+                        <TextView
+                            android:id="@+id/deal_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hot Deal"
+                            fontPath="fonts/Lato-Bold.ttf"
+                            android:textSize="14sp"
+                            custom:ignore="MissingPrefix" />
+                    </LinearLayout>
+
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/deal_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/linearlayoutDeal"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/padding_20"
+                        app:SpinKit_Color="@color/colorPrimary" />
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/deal_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/linearlayoutDeal"
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0"
+                        android:nestedScrollingEnabled="false" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/celebrate_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorPrimary"
+                    android:paddingBottom="@dimen/padding_15"
+                    android:paddingTop="@dimen/padding_15">
+
+                    <TextView
+                        android:id="@+id/celebrate_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:text="Celebrate"
+                        android:textAlignment="center"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="14sp"
+                        custom:ignore="MissingPrefix" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/celebrate_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/celebrate_textview"
+                        android:layout_marginTop="@dimen/padding_08" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/cake_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="@color/colorWhite"
-                    android:elevation="1dp"
                     android:paddingBottom="@dimen/padding_10"
                     android:paddingTop="@dimen/padding_10">
 
@@ -76,8 +189,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Cakes for Ocassions"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/cat_view_all"
@@ -94,13 +206,16 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="12sp" />
 
-                    <ProgressBar
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/ocassion_progressbar"
-                        android:layout_width="match_parent"
+                        style="@style/SpinKitView.Small.FoldingCube"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ocassion_textview"
+                        android:layout_gravity="center"
+                        android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/padding_20"
-                        android:visibility="visible" />
+                        app:SpinKit_Color="@color/colorPrimary" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/cake_recycleView"
@@ -112,13 +227,65 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/recent_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@color/colorGreyLight"
+                    android:paddingBottom="@dimen/padding_20"
+                    android:paddingTop="@dimen/padding_20">
+
+                    <LinearLayout
+                        android:id="@+id/recentlayoutDeal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_5"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/padding_5">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_remove_red_eye_black_24dp"
+                            android:tint="@color/colorGrey" />
+
+                        <TextView
+                            android:id="@+id/recent_textview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Recently Viewed"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/recent_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_below="@id/recentlayoutDeal"
+                        android:layout_marginTop="@dimen/padding_20"
+                        app:SpinKit_Color="@color/colorPrimary" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recent_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/recentlayoutDeal"
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/handpicked_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="@color/colorWhite"
-                    android:elevation="1dp"
+                    android:alpha="0"
                     android:paddingBottom="@dimen/padding_10"
                     android:paddingTop="@dimen/padding_10">
 
@@ -130,17 +297,18 @@
                         android:layout_marginLeft="@dimen/padding_15"
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
-                        android:text="Chief's Choice"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:text="Chef's Choice"
+                        android:textSize="14sp" />
 
-                    <ProgressBar
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/handpicked_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/handpicked_textview"
+                        android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/padding_20"
-                        android:visibility="visible" />
+                        app:SpinKit_Color="@color/colorPrimary" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/handpicked_recycleView"
@@ -158,8 +326,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="@color/colorWhite"
-                    android:elevation="1dp"
+
                     android:paddingBottom="@dimen/padding_10"
                     android:paddingTop="@dimen/padding_10">
 
@@ -171,8 +338,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Flowers"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/cat2_view_all"
@@ -188,13 +354,15 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="12sp" />
 
-                    <ProgressBar
-                        android:id="@+id/flowers_progressbar"
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/flower_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/flowers_textview"
+                        android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/padding_20"
-                        android:visibility="visible" />
+                        app:SpinKit_Color="@color/colorPrimary" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/flowers_recycleView"
@@ -228,13 +396,67 @@
                 </FrameLayout>
 
                 <RelativeLayout
+                    android:id="@+id/category_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="3dp"
+                    android:paddingBottom="@dimen/padding_10"
+                    android:paddingTop="@dimen/padding_10">
+
+                    <TextView
+                        android:id="@+id/category_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:padding="@dimen/padding_5"
+                        android:text="Kids Corner"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/category_view_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="@dimen/padding_15"
+                        android:layout_marginRight="@dimen/padding_15"
+                        android:background="@drawable/view_all_btn_bg"
+                        android:gravity="end"
+                        android:padding="@dimen/padding_5"
+                        android:text="View All"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="12sp" />
+
+
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/category_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/category_textview"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="@dimen/padding_20"
+                        app:SpinKit_Color="@color/colorPrimary" />
+
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/category_recycleView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/category_textview"
+                        android:layout_marginTop="@dimen/padding_08"
+                        android:alpha="0"
+                        android:nestedScrollingEnabled="false" />
+                </RelativeLayout>
+
+                <RelativeLayout
                     android:id="@+id/gift_RLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
-                    android:background="@color/colorWhite"
-                    android:elevation="1dp"
                     android:paddingBottom="@dimen/padding_10"
                     android:paddingTop="@dimen/padding_10">
 
@@ -246,8 +468,7 @@
                         android:layout_marginRight="@dimen/padding_15"
                         android:padding="@dimen/padding_5"
                         android:text="Gifts"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp"/>
 
                     <TextView
                         android:id="@+id/cat3_view_all"
@@ -263,13 +484,16 @@
                         android:textColor="@color/colorWhite"
                         android:textSize="12sp" />
 
-                    <ProgressBar
+
+                    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/gift_progressbar"
+                        style="@style/SpinKitView.Small.FoldingCube"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/gift_textview"
+                        android:layout_centerInParent="true"
                         android:layout_marginTop="@dimen/padding_20"
-                        android:visibility="visible" />
+                        app:SpinKit_Color="@color/colorPrimary" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/gift_recycleView"

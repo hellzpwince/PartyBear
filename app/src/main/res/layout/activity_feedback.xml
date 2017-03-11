@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding_20"
                 android:gravity="center"
-                android:text="FEEDBACK FORM"
+                android:text="Request/Feedback"
                 android:textColor="@color/colorDarkBlack"
                 android:textSize="16sp" />
 
@@ -58,7 +58,7 @@
                 android:layout_marginBottom="@dimen/padding_15"
                 android:ems="10"
                 android:inputType="text"
-                android:text="Subject Line" />
+                android:hint="Subject Line" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -73,7 +73,7 @@
                 android:layout_marginBottom="@dimen/padding_20"
                 android:ems="10"
                 android:inputType="phone"
-                android:text="Phone Number" />
+                android:hint="Phone Number" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -87,9 +87,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:text="Feedback Message" />
-
-
+                android:hint="Message" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

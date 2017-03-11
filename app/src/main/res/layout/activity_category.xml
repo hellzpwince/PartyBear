@@ -26,6 +26,7 @@
         android:id="@+id/categoryscroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
         android:layout_gravity="fill_vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         custom:ignore="ObsoleteLayoutParam">
@@ -34,9 +35,7 @@
             android:id="@+id/categoryViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/zero_padding">
-
-        </android.support.v4.view.ViewPager>
+            android:layout_margin="@dimen/zero_padding"/>
     </android.support.v4.widget.NestedScrollView>
 
     <com.roughike.bottombar.BottomBar

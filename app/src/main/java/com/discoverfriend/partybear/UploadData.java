@@ -42,7 +42,6 @@ public class UploadData extends AppCompatActivity {
                 Log.e("Imageurl", child.path);
             }
         }
-
     }
 
     public void setupToolbar() {

@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/cod"
+        android:icon="@drawable/ic_verify_payment"
+        android:title="Cash On Delivery" />
+    <item
+        android:id="@+id/online"
+        android:icon="@drawable/ic_master_card"
+        android:title="Debit/Credit/Net Banking" />
+</menu>

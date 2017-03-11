@@ -5,16 +5,8 @@ package com.discoverfriend.partybear.category;
  */
 
 public class CategoryModel {
-    private String name, offer, imageurl, feature;
-    private int price;
-
-    public CategoryModel(String name, String offer, String imageurl, String feature, int price) {
-        this.name = name;
-        this.offer = offer;
-        this.imageurl = imageurl;
-        this.feature = feature;
-        this.price = price;
-    }
+    private String name, offer, imageurl, feature,premium;
+    private int price,baseprice;
 
     public CategoryModel() {
     }
@@ -51,6 +43,14 @@ public class CategoryModel {
         this.feature = feature;
     }
 
+    public String getPremium() {
+        return premium;
+    }
+
+    public void setPremium(String premium) {
+        this.premium = premium;
+    }
+
     public int getPrice() {
         return price;
     }
@@ -59,4 +59,21 @@ public class CategoryModel {
         this.price = price;
     }
 
+    public int getBaseprice() {
+        return baseprice;
+    }
+
+    public void setBaseprice(int baseprice) {
+        this.baseprice = baseprice;
+    }
+
+    public CategoryModel(String name, String offer, String imageurl, String feature, String premium, int price, int baseprice) {
+        this.name = name;
+        this.offer = offer;
+        this.imageurl = imageurl;
+        this.feature = feature;
+        this.premium = premium;
+        this.price = price;
+        this.baseprice = baseprice;
+    }
 }

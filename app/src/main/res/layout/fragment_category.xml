@@ -1,28 +1,32 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.discoverfriend.partybear.CategoryFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <ProgressBar
+
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/fragmentProgressbarOne"
+        style="@style/SpinKitView.FoldingCube"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="visible" />
+        app:SpinKit_Color="@color/colorPrimary" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fragOneRV_xml"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0"/>
+        android:alpha="0" />
+
 
     <LinearLayout
         android:id="@+id/error_screen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
+        android:gravity="center|center_vertical|center_horizontal"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -41,4 +45,20 @@
             android:textColor="@color/colorGrey" />
     </LinearLayout>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/items_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/padding_5"
+        android:layout_marginTop="@dimen/padding_15"
+        android:text="Loading Items"
+        android:textColor="@color/colorGrey"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="100dp"
+        android:background="@color/transparent" />
+</LinearLayout>

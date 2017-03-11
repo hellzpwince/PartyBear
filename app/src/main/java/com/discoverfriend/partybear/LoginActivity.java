@@ -31,6 +31,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.onurciner.toastox.ToastOX;
 
 
@@ -116,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Log.e("Facebook E",error.getMessage());
+                Log.e("Facebook E", error.getMessage());
                 ToastOX.error(getApplicationContext(), "Login Error Occurred. Please Try Again! ", Toast.LENGTH_SHORT);
                 progress.dismiss();
             }
@@ -134,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
@@ -147,8 +147,6 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(userIntent);
                 finish();
             } else {
-                // Google Sign In failed, update UI appropriately
-                // ...
                 progress.dismiss();
                 ToastOX.error(getApplicationContext(), "Login Failed.Try Again", Toast.LENGTH_SHORT);
             }
@@ -167,10 +165,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d("GLogin", "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w("GLogin", "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -185,10 +179,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        //Log.d("LoginActivity", "handleFacebookAccessToken:" + token);
-        // [START_EXCLUDE silent]
-        //showProgressDialog();
-        // [END_EXCLUDE]
         if (progress != null && !progress.isShowing()) {
             progress.show();
         }
@@ -197,11 +187,6 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                     //   Log.d("LoginActivity", "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             if (progress != null && progress.isShowing()) {
                                 progress.dismiss();
@@ -213,10 +198,6 @@ public class LoginActivity extends AppCompatActivity {
                         if (progress != null && progress.isShowing()) {
                             progress.dismiss();
                         }
-
-                        // [START_EXCLUDE]
-                        // hideProgressDialog();
-                        // [END_EXCLUDE]
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -245,4 +226,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ImageLoader.getInstance().clearMemoryCache();
+    }
 }

@@ -2,17 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/nav_group_nav">
         <item
-            android:id="@+id/menu_buyCakes"
-            android:title="Order a Cake" />
-        <item
-            android:id="@+id/menu_flowers"
-            android:title="Flowers" />
-        <item
             android:id="@+id/menu_buyGifts"
             android:title="Gifts" />
         <item
             android:id="@+id/menu_bowerbird"
-            android:title="Order Handcrafted Gifts" />
+            android:title="Handcrafted Gifts" />
     </group>
     <group android:id="@+id/nav_group_quicklink">
         <item
@@ -33,7 +27,16 @@
         <item
             android:id="@+id/menu_help"
             android:title="Help and Support" />
+        <item
+            android:id="@+id/menu_issue"
+            android:title="Report Issue" />
 
+        <item
+            android:id="@+id/menu_terms"
+            android:title="Terms &amp; Privacy" />
+        <item
+            android:id="@+id/menu_sell"
+            android:title="Sell with us" />
         <item
             android:id="@+id/menu_logout"
             android:title="Logout"

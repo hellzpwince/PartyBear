@@ -2,6 +2,7 @@ package com.discoverfriend.partybear.Seperate_list;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -10,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.discoverfriend.partybear.CategoryFragment;
@@ -18,26 +18,35 @@ import com.discoverfriend.partybear.Product.ProductActivity;
 import com.discoverfriend.partybear.R;
 import com.discoverfriend.partybear.category.CategoryModel;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ListActivity extends AppCompatActivity {
     String itemtype, itemlink, itemname;
     DatabaseReference rootRef;
     Query myquery;
-    private View mView;
     private RecyclerView mRecycleView;
-    private ProgressBar mProgress;
+    private SpinKitView mProgress;
+    long items;
+    TextView items_no;
+    int ACTIVE = 0;
+    Context ctx;
+    FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+        ctx = this;
+        items_no = (TextView) findViewById(R.id.items_no);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             itemlink = extras.getString("link");
@@ -45,9 +54,9 @@ public class ListActivity extends AppCompatActivity {
             itemtype = extras.getString("type");
         }
         setupToolbar(itemname);
-
         mRecycleView = (RecyclerView) findViewById(R.id.fragOneRV_xml);
-        mProgress = (ProgressBar) findViewById(R.id.progress_listactivity);
+        mRecycleView.setNestedScrollingEnabled(false);
+        mProgress = (SpinKitView) findViewById(R.id.progress_listactivity);
         rootRef = FirebaseDatabase.getInstance().getReference();
         myquery = rootRef.child("categories").child(itemlink).child("products");
         myquery.addValueEventListener(new ValueEventListener() {
@@ -60,7 +69,10 @@ public class ListActivity extends AppCompatActivity {
                     setupToolbar(itemname);
 
                 } else {
-                    FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder> categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
+                    ACTIVE = 1;
+                    items = dataSnapshot.getChildrenCount();
+                    items_no.setText(String.valueOf(items) + " " + itemname);
+                    categoryCardRecycler = new FirebaseRecyclerAdapter<CategoryModel, CategoryFragment.categoryCardViewHolder>(
                             CategoryModel.class,
                             R.layout.grid_cardview,
                             CategoryFragment.categoryCardViewHolder.class,
@@ -74,22 +86,26 @@ public class ListActivity extends AppCompatActivity {
 
                                 viewHolder.setTitle(model.getName());
                                 viewHolder.setPrice(model.getPrice());
-                                viewHolder.setImage(ListActivity.this, model.getImageurl());
+                                if (model.getBaseprice() != 0) {
+                                    viewHolder.setBasePrice(model.getBaseprice());
+                                }
+                                viewHolder.setImage(model.getImageurl());
                                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        viewHolder.startProductActivity(ListActivity.this, post_key);
+                                        viewHolder.startProductActivity(ctx, post_key);
                                     }
                                 });
                             } catch (Exception e) {
                                 Log.e("Try Error", "Grid Category Error Logged.");
                             }
+                            mProgress.setVisibility(View.GONE);
                         }
 
                         @Override
                         protected void onDataChanged() {
                             super.onDataChanged();
-                            mProgress.setVisibility(View.GONE);
+
                             mRecycleView.setVisibility(View.VISIBLE);
                         }
                     };
@@ -150,8 +166,32 @@ public class ListActivity extends AppCompatActivity {
         }
 
         public void setImage(Context ctx, String image) {
+            DisplayImageOptions options;
+            options = new DisplayImageOptions.Builder()
+                    .showImageOnLoading(R.drawable.loading_100)
+                    .showImageForEmptyUri(R.drawable.loading_100)
+                    .showImageOnFail(R.drawable.loading_100)
+                    .cacheInMemory(false)
+                    .cacheOnDisk(true)
+                    .considerExifParams(true)
+                    .bitmapConfig(Bitmap.Config.RGB_565)
+                    .displayer(new RoundedBitmapDisplayer(0))
+                    .build();
+
             ImageView category_image = (ImageView) mview.findViewById(R.id.categoryCardImageView);
-            Picasso.with(ctx).load(image).resize(400, 400).placeholder(R.drawable.loading_100).into(category_image);
+            ImageLoader.getInstance().displayImage(image, category_image, options);
+            //ImageView category_image = (ImageView) mview.findViewById(R.id.categoryCardImageView);
+            //Picasso.with(ctx).load(image).resize(400, 400).placeholder(R.drawable.loading_100).into(category_image);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (ACTIVE == 1) {
+            categoryCardRecycler.cleanup();
+            mRecycleView.removeAllViewsInLayout();
+        }
+        ctx = null;
     }
 }
